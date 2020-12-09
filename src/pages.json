@@ -1,0 +1,76 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "eBook",
+				"enablePullDownRefresh":true,
+				// 下拉刷新
+				"pullToRefresh":{},
+				"animationType":"pop-in",
+				"animationDuration":300
+			}
+		},
+		{
+			"path": "pages/search/index",
+			"style": {
+				"navigationBarTitleText": "search",
+				"enablePullDownRefresh":true,
+				// 下拉刷新
+				"pullToRefresh":{},
+				"animationType":"pop-in",
+				"animationDuration":300
+				// 导航栏透明设置。支持 always 一直透明 / auto 滑动自适应 / none 不透明
+				// "transparentTitle":"auto"
+			}
+		},
+		{
+			"path": "pages/mine/index",
+			"style": {
+				"navigationBarTitleText": "mine",
+				"enablePullDownRefresh":true,
+				// 下拉刷新
+				"pullToRefresh":{},
+				"animationType":"pop-in",
+				"animationDuration":300
+				// 导航栏透明设置。支持 always 一直透明 / auto 滑动自适应 / none 不透明
+				// "transparentTitle":"auto"
+			}
+		},
+		{
+			"path": "pages/read/index",
+			"style": {
+				"navigationBarTitleText": "read",
+				"enablePullDownRefresh":true,
+				// 下拉刷新
+				"pullToRefresh":{},
+				"animationType":"pop-in",
+				"animationDuration":300
+				// 导航栏透明设置。支持 always 一直透明 / auto 滑动自适应 / none 不透明
+				// "transparentTitle":"auto"
+			}
+		}
+	],
+	"tabBar": {
+			"list": [{
+			  "pagePath": "pages/index/index",
+			  "text": "书架"
+			},{
+				"pagePath": "pages/search/index",
+				"text": "发现"
+			  },{
+			  "pagePath": "pages/mine/index",
+			  "text": "我的"
+			}]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "LM",
+		// 导航栏样式，仅支持 default/custom。custom即取消默认的原生导航栏
+		"navigationStyle":"custom",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+		// 导航栏透明设置。支持 always 一直透明 / auto 滑动自适应 / none 不透明
+		// "transparentTitle":"auto"
+	}
+}
