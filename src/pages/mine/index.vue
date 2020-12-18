@@ -1,55 +1,123 @@
 <template>
-	<div>
-		<view class="content">
-             <view>
-                 <camera device-position="back" flash="off" @error="error" style="width: 100%; height: 300px;"></camera>
-                 <button type="primary" @click="takePhoto">拍照</button>
-                 <view>预览</view>
-            
-             </view>
-		</view>
-	</div>
+  <view>
+    <view class="person-head">
+      <cmd-avatar
+        src=""
+        @click="fnInfoWin"
+        size="lg"
+        :make="{ 'background-color': '#fff' }"
+      ></cmd-avatar>
+      <view class="person-head-box">
+        <view class="person-head-nickname"></view>
+        <view class="person-head-username"
+          >ID：
+          <span @click="login">登陆</span>
+          <span @click="register">/注册</span>
+        </view>
+      </view>
+    </view>
+    <view class="person-list">
+      <cmd-cell-item
+        title="我的书籍"
+        addon="v1.0"
+        slot-left
+        arrow
+        @click="openBooklist"
+      >
+        <cmd-icon type="alert-circle" size="24" color="#368dff"></cmd-icon>
+      </cmd-cell-item>
+      <cmd-cell-item title="我的收藏" slot-left arrow>
+        <cmd-icon type="bullet-list" size="24" color="#368dff"></cmd-icon>
+      </cmd-cell-item>
+      <cmd-cell-item title="消息通知" slot-left arrow>
+        <cmd-icon type="message" size="24" color="#368dff"></cmd-icon>
+      </cmd-cell-item>
+      <cmd-cell-item title="系统设置" slot-left arrow>
+        <cmd-icon type="settings" size="24" color="#368dff"></cmd-icon>
+      </cmd-cell-item>
+      <cmd-cell-item title="意见反馈" addon="v1.0" slot-left arrow>
+        <cmd-icon type="alert-circle" size="24" color="#368dff"></cmd-icon>
+      </cmd-cell-item>
+      <cmd-cell-item title="检查版本" addon="v1.0" slot-left arrow>
+        <cmd-icon type="alert-circle" size="24" color="#368dff"></cmd-icon>
+      </cmd-cell-item>
+    </view>
+  </view>
 </template>
 
 <script>
-import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
-	export default {
-		data() {
-			return {
-				title: 'mine'
-			}
-		},
-		onLoad() {
+import cmdAvatar from "@/components/cmd-person_1.1/components/cmd-avatar/cmd-avatar.vue";
+import cmdIcon from "@/components/cmd-person_1.1/components/cmd-icon/cmd-icon.vue";
+import cmdCellItem from "@/components/cmd-person_1.1/components/cmd-cell-item/cmd-cell-item.vue";
 
-		},
-		methods: {
-
-		},
-		components: {uniNavBar}
-	}
+export default {
+  components: {
+    cmdAvatar,
+    cmdCellItem,
+    cmdIcon,
+  },
+  data() {
+    return {};
+  },
+  methods: {
+    /**
+     * 打开用户信息页
+     */
+    fnInfoWin() {
+      uni.navigateTo({
+        url: "/pages/user/info/info",
+      });
+    },
+    login() {
+      uni.navigateTo({
+        url: "/pages/user/login/login",
+      });
+    },
+    register() {
+      uni.navigateTo({
+        url: "/pages/user/register/register",
+      });
+    },
+    openBooklist() {
+      uni.switchTab({
+        url: "/pages/index/index",
+      });
+    },
+  },
+};
 </script>
 
 <style>
-	.content {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
+.person-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 150px;
+  padding-left: 20px;
+  background: linear-gradient(to right, #365fff, #36bbff);
+}
 
-	.logo {
-		height: 200rpx;
-		width: 200rpx;
-		margin: 200rpx auto 50rpx auto;
-	}
+.person-head-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-left: 10px;
+}
 
-	.text-area {
-		display: flex;
-		justify-content: center;
-	}
+.person-head-nickname {
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+}
 
-	.title {
-		font-size: 36rpx;
-		color: #8f8f94;
-	}
+.person-head-username {
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.person-list {
+  line-height: 0;
+}
 </style>

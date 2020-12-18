@@ -1,13 +1,11 @@
 <template>
     <div>
-        	<uni-drawer ref="showLeft" mode="left" :width="180" @change="change($event,'showLeft')">
+        	<uni-drawer ref="showLeft" mode="right" :width="180" @change="change($event,'showLeft')">
 					<button @click="goToMine">我的</button>					
 					<view class="close">
 						<view class="word-btn" hover-class="word-btn--hover" :hover-start-time="20" :hover-stay-time="70" @click="closeDrawer('showLeft')"><text class="word-btn-white">关闭</text></view>
 					</view>
 				</uni-drawer>
-         <p>1</p>
-
         <view>
             <uni-fab
             class ='fontSize'
@@ -35,7 +33,7 @@ export default {
                 {text:'',color:'green'},
                 {text:'2'}
             ],
-            horizontal:'left',
+            horizontal:'right',
             vertical:'bottom',
             direction:'horizontal'
         }

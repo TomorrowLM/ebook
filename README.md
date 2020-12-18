@@ -462,3 +462,10 @@ uni-app是逻辑和渲染分离的，渲染层在**app端**提供了两套排版
 下面的页面，只有运行至 App 时才会编译进去。
 
 ![img](https://img-cdn-qiniu.dcloud.net.cn/uniapp/doc/img/platform-4.png)
+
+
+
+# API
+
+getApp() 函数用于获取当前应用实例，一般用于获取globalData 。
+
