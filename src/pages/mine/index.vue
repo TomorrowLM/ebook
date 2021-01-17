@@ -19,7 +19,6 @@
     <view class="person-list">
       <cmd-cell-item
         title="我的书籍"
-        addon="v1.0"
         slot-left
         arrow
         @click="openBooklist"
@@ -35,7 +34,7 @@
       <cmd-cell-item title="系统设置" slot-left arrow>
         <cmd-icon type="settings" size="24" color="#368dff"></cmd-icon>
       </cmd-cell-item>
-      <cmd-cell-item title="意见反馈" addon="v1.0" slot-left arrow>
+      <cmd-cell-item title="意见反馈"  slot-left arrow>
         <cmd-icon type="alert-circle" size="24" color="#368dff"></cmd-icon>
       </cmd-cell-item>
       <cmd-cell-item title="检查版本" addon="v1.0" slot-left arrow>

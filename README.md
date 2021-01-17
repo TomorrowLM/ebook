@@ -469,3 +469,23 @@ uni-app是逻辑和渲染分离的，渲染层在**app端**提供了两套排版
 
 getApp() 函数用于获取当前应用实例，一般用于获取globalData 。
 
+# mysql
+
+mysql -uroot -h 127.0.0.1 -p
+
+use ebook;
+
+show tables;
+
+mysql> create table login(
+    -> username char(9),
+    -> password char(12)
+    -> )charset utf8;
+
+show tables;
+
+desc login;
+
+insert into login values('liming','123456');
+
+ select * from login where username = 'liming';
