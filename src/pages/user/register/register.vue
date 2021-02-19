@@ -70,6 +70,17 @@
             >
               注册
             </button>
+            <uni-popup ref="popup" type="dialog">
+              <uni-popup-dialog
+                type="error"
+                message="12"
+                :duration="2000"
+                :before-close="true"
+                @close="close"
+                @confirm="confirm"
+                title="用户名存在或者密码不正确"
+              >12</uni-popup-dialog>
+            </uni-popup>
           </view>
         </cmd-transition>
         <!-- #endif -->
@@ -119,13 +130,18 @@ import cmdPageBody from "@/components/cmd-person_1.1/components/cmd-page-body/cm
 import cmdTransition from "@/components/cmd-person_1.1/components/cmd-transition/cmd-transition.vue";
 import cmdInput from "@/components/cmd-person_1.1/components/cmd-input/cmd-input.vue";
 import axois from "axios";
-
+import uniPopup from "@/components/uni-popup/uni-popup.vue";
+import uniPopupMessage from "@/components/uni-popup/uni-popup-message.vue";
+import uniPopupDialog from "@/components/uni-popup/uni-popup-dialog.vue";
 export default {
   components: {
     cmdNavBar,
     cmdPageBody,
     cmdTransition,
     cmdInput,
+    uniPopup,
+    uniPopupMessage,
+    uniPopupDialog,
   },
 
   data() {
@@ -149,6 +165,7 @@ export default {
         interval: "",
       },
       status: true, // true手机注册,false账号注册
+
     };
   },
 
@@ -189,28 +206,43 @@ export default {
     /**
      * 注册按钮点击执行
      */
-    fnRegister() {
-      this.$http
-        .post(
-          'http://127.0.0.1:8888/list_user',
-          {
+    fnRegister() {  
+      let that = this
+      axois
+        .post("http://127.0.0.1:8000/register", {
+          params: {
             username: this.account.username,
             password: this.account.password,
           },
-          {}
-        )
+        })
         .then(
           function(data) {
-            console.log("注册请求成攻！ ", data.body);
-            // if (data.body.affectedRows > 0) {
-            //   alert("注册成攻！");
-            //   document.getElementById("login_in").style.display = "block";
-            // }
+            if (data.data != "fail") {
+              console.log(data);
+              localStorage.setItem("username", data.data);
+              uni.switchTab({
+                url: "/pages/mine/index",
+              });
+            } else {          
+               that.$refs.popup.open()
+            }
           },
           function(response) {
-            console.log(response);
+            
           }
         );
+    },
+ 
+    close(done) {
+      // TODO 做一些其他的事情，before-close 为true的情况下，手动执行 done 才会关闭对话框
+      // ...
+      done();
+    },
+    confirm(done, value) {
+      // 输入框的值
+      // TODO 做一些其他的事情，手动执行 done 才会关闭对话框
+      // ...
+      done();
     },
     /**
      * 获取验证码

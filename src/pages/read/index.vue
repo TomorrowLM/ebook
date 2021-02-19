@@ -1,5 +1,5 @@
 <template>
-  <view class="body">
+  <view class="read" v-cloak>
     <view class="content">
       <view>
         <p>{{ book.name }}</p>
@@ -91,6 +91,10 @@ export default {
       pickerStatus: false,
     };
   },
+    deactivated(){
+      console.log(2)
+    this.color = 'white'
+  },
   mounted() {
     this.init();
   },
@@ -174,7 +178,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .content {
   display: flex;
   flex-direction: column;

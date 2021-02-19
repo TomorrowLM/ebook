@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="book" ref="book">
     <uni-nav-bar
       left-icon="bars"
       left-text=""
@@ -16,10 +16,11 @@
       @change="change($event, 'showLeft')"
     >
       <view class="imgInch" @click="goToMine">
-        <img
-          src="https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3963847356,4202685319&fm=26&gp=0.jpg"
-          alt=""
-        />
+        <cmd-cel-item slot-right>
+          <cmd-avatar
+            src="https://avatar.bbs.miui.com/images/noavatar_small.gif"
+          ></cmd-avatar>
+        </cmd-cel-item>
       </view>
       <button @click="goToMine">本地文件扫描</button>
     </uni-drawer>
@@ -40,6 +41,7 @@ import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue";
 import uniSearchBar from "@/components/uni-search-bar/uni-search-bar.vue";
 import uniDrawer from "@/components/uni-drawer/uni-drawer.vue";
 import cmdAvatar from "@/components/cmd-person_1.1/components/cmd-avatar/cmd-avatar.vue";
+import cmdCelItem from "@/components/cmd-person_1.1/components/cmd-cell-item/cmd-cell-item.vue";
 export default {
   data() {
     return {
@@ -52,7 +54,17 @@ export default {
       ],
     };
   },
-  onLoad() {},
+  activated() {
+  //  document.getElementsByClassName('book')[0].style.backgroundColor = 'red'
+  // this.$refs.book.style.backgroundColor='red'
+ },
+  deactivated() {
+    console.log(10);
+  },
+
+  onLoad() {
+    // location.reload()
+  },
   methods: {
     showDrawer(e) {
       this.$refs[e].open();
@@ -80,11 +92,12 @@ export default {
       });
     },
   },
-  components: { uniNavBar, uniSearchBar, uniDrawer, cmdAvatar },
+
+  components: { uniNavBar, uniSearchBar, uniDrawer, cmdAvatar, cmdCelItem },
 };
 </script>
 
-<style>
+<style scoped>
 .content {
   display: flex;
   flex-direction: row;
@@ -131,7 +144,7 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #21aac2;
+  background: linear-gradient(to right, #365fff, #36bbff);
 }
 .imgInch img {
   width: 70%;
