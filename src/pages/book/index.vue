@@ -58,13 +58,16 @@ export default {
   //  document.getElementsByClassName('book')[0].style.backgroundColor = 'red'
   // this.$refs.book.style.backgroundColor='red'
  },
-  deactivated() {
-    console.log(10);
+  activated() {
+    document.getElementsByClassName('book')[0].style.background = 'white'
+    document.getElementsByTagName('uni-page-wrapper')[0].style.background = 'white'
   },
 
-  onLoad() {
-    // location.reload()
-  },
+  // onLoad() {
+  //   // location.reload()
+  //   console.log(document.getElementsByClassName('book'))
+    
+  // },
   methods: {
     showDrawer(e) {
       this.$refs[e].open();
@@ -75,16 +78,23 @@ export default {
     },
     // 抽屉状态发生变化触发
     change(e, type) {
-      console.log(Page.path);
-      console.log(
-        (type === "showLeft" ? "左窗口" : "右窗口") + (e ? "打开" : "关闭")
-      );
+      // console.log(Page.path);
+      // console.log(
+      //   (type === "showLeft" ? "左窗口" : "右窗口") + (e ? "打开" : "关闭")
+      // );
       this[type] = e;
     },
     goToMine() {
-      uni.switchTab({
-        url: "/pages/mine/index",
-      });
+      document.addEventListener( "plusready", onPlusReady, false );
+      function onPlusReady() {
+	  plus.io.requestFileSystem( plus.io.PUBLIC_DOCUMENTS, function( fs ) {
+		// 可通过fs操作PUBLIC_DOCUMENTS文件系统 
+		// ......
+    console.log(1)
+	}, function ( e ) {
+		alert( "Request file system failed: " + e.message );
+	} );
+}
     },
     read(name) {
       uni.navigateTo({
@@ -154,6 +164,6 @@ img {
 }
 button {
   box-sizing: border-box;
-  border: 3px solid #55d9e6;
+  /* border: 3px solid #55d9e6; */
 }
 </style>

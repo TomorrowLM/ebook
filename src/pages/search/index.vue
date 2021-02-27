@@ -22,7 +22,23 @@ export default {
 	  current: 0
     };
   },
-  onLoad() {},
+  onLoad() {
+//     uni.downloadFile({
+//   url: 'https://uniapp.dcloud.io/api/file/file?id=opendocument',
+//   success: function (res) {
+//     var filePath = res.tempFilePath;
+//     uni.openDocument({
+//       filePath: filePath,
+//       success: function (res) {
+//         console.log('打开文档成功');
+//       }
+//     });
+//   }
+// });
+  },
+  activated() {
+    document.getElementsByTagName('uni-page-wrapper')[0].style.background = 'white'
+  },
   methods: {
     changeTab(index) {
       console.log("当前选中的项：" + index);

@@ -57,8 +57,10 @@ export default {
     };
   },
   onShow() {
-    console.log(1);
     this.username = localStorage.getItem("username");
+  },
+  activated() {
+    document.getElementsByTagName('uni-page-wrapper')[0].style.background = 'white'
   },
   methods: {
     /**
@@ -80,8 +82,9 @@ export default {
       });
     },
     openBooklist() {
+      console.log(1)
       uni.switchTab({
-        url: "/pages/index/index",
+        url: "/pages/book/index",
       });
     },
   },
