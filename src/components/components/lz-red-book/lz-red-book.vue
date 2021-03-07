@@ -137,7 +137,7 @@ export default {
 					}).exec();
 				})
 			}else{
-				console.log(copyBookText);
+				// console.log(copyBookText);
 				that.isEndFor=true
 				that.swiper.bookTextArr.push(copyBookText)
 			}
@@ -153,11 +153,11 @@ export default {
 				that.isEndFor=true
 				that.swiper.bookTextArr.push(copyBookText)
 			}
-			console.log(that.swiper.bookTextArr);
+			// console.log(that.swiper.bookTextArr);
 		},
 		//滑动时触发
 		change(e) {
-			console.log(e);
+			// console.log(e);
 			this.swiper.pageNum = e.detail.current+1;
 			this.swiper.isEnd=false
 			this.swiper.isStart=false

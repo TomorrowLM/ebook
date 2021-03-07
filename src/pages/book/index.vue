@@ -22,7 +22,7 @@
           ></cmd-avatar>
         </cmd-cel-item>
       </view>
-      <button @click="goToMine">本地文件扫描</button>
+      <button @click="goToMine" class="goToMine">本地文件扫描</button>
     </uni-drawer>
     <uni-search-bar clearButton="always"></uni-search-bar>
     <view class="content">
@@ -52,6 +52,7 @@ export default {
         { name: "春花秋月知多少" },
         { name: "活着" },
       ],
+	  resInfo:''
     };
   },
   activated() {
@@ -59,8 +60,8 @@ export default {
   // this.$refs.book.style.backgroundColor='red'
  },
   activated() {
-    document.getElementsByClassName('book')[0].style.background = 'white'
-    document.getElementsByTagName('uni-page-wrapper')[0].style.background = 'white'
+    // document.getElementsByClassName('book')[0].style.background = 'white'
+    // document.getElementsByTagName('uni-page-wrapper')[0].style.background = 'white'
   },
 
   // onLoad() {
@@ -85,16 +86,61 @@ export default {
       this[type] = e;
     },
     goToMine() {
-      document.addEventListener( "plusready", onPlusReady, false );
-      function onPlusReady() {
-	  plus.io.requestFileSystem( plus.io.PUBLIC_DOCUMENTS, function( fs ) {
-		// 可通过fs操作PUBLIC_DOCUMENTS文件系统 
-		// ......
-    console.log(1)
-	}, function ( e ) {
-		alert( "Request file system failed: " + e.message );
-	} );
+		//uni-app 中，没有 document。可以使用 plus.globalEvent.addEventListener 来实现
+		// plus.globalEvent.addEventListener( "plusready", onPlusReady, false );
+		// 扩展API加载完毕，现在可以正常调用扩展API
+		// 监听设备网络状态变化事件
+		// plus.globalEvent.addEventListener('netchange', function(){});
+function onPlusReady() {
+	const self = this;
+	var url="file:///storage/emulated/0/22.doc"; 
+	//将本地URL路径转换成平台绝对路径
+	var path=plus.io.convertLocalFileSystemURL(url);
+	//将平台绝对路径转换成本地URL路径
+	// path=plus.io.convertAbsoluteFileSystem(url);
+	console.log(path);    
+	//请求本地文件系统对象
+	plus.io.requestFileSystem(plus.io.PRIVATE_WWW, function( fs ) {
+		console.log(fs.root.fullPath) 
+	     fs.root.getFile('../../../../../../Documents/2222.txt',{create:true}, function(fileEntry){
+				fileEntry.file( function(file){
+					var fileReader = new plus.io.FileReader();
+					console.log("getFile:" + JSON.stringify(file));
+					fileReader.readAsText(file, 'utf-8');
+					fileReader.onloadend = function(evt) {
+						console.log("11" + evt);
+						console.log("evt.target" + evt.target);
+						console.log(evt.target.result);
+					}
+					console.log(file.size + '--' + file.name);
+				} );
+			});
+		
+		}, function ( e ) {
+			console.log( "Request file system failed: " + e.message );
+		} );
+
+	//通过URL参数获取目录对象或文件对象
+plus.io.resolveLocalFileSystemURL(path, function(entry) {
+	//entry=DirectoryEntry 文件系统中的目录对象，用于管理特定的本地目录
+					// console.log(entry.toLocalURL())
+					
+					///读取文件  
+					
+					entry.file(function(file) {
+						// console.log(file)
+						//文件系统中的读取文件对象，用于获取文件的内容
+						var fileReader = new plus.io.FileReader();
+						fileReader.readAsText(file, 'GB2312');
+						fileReader.onload = function(e) {
+						// console.log(e.target.result);
+						}
+						//以文本格式读取文件数据内容
+						
+					});
+				})
 }
+onPlusReady()
     },
     read(name) {
       uni.navigateTo({
