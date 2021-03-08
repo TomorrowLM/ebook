@@ -1,5 +1,6 @@
 <template>
   <div class="book" ref="book">
+	  <div  :style="{'height':StatusBarHeight +'px',backgroundColor:'transparent'}"></div>
     <uni-nav-bar
       left-icon="bars"
       left-text=""
@@ -45,6 +46,7 @@ import cmdCelItem from "@/components/cmd-person_1.1/components/cmd-cell-item/cmd
 export default {
   data() {
     return {
+	  StatusBarHeight:0,
       title: "Hello",
       bookList: [
         { name: "完美世界" },
@@ -54,6 +56,16 @@ export default {
       ],
 	  resInfo:''
     };
+  },
+  onLoad() {
+  	console.log('App Launch')
+  	const that = this;
+  		uni.getSystemInfo({
+  			success(res) {
+  				that.StatusBarHeight = res.statusBarHeight;
+  				console.log(res.statusBarHeight)
+  			}
+  		})
   },
   activated() {
   //  document.getElementsByClassName('book')[0].style.backgroundColor = 'red'

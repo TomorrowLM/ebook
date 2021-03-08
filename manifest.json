@@ -52,7 +52,12 @@
         },
         "uniStatistics" : {
             "enable" : true
-        }
+        },
+		"statusbar": {  
+		    "immersed": false  
+		},
+		"titleNView": false //禁用原生导航栏
+
     },
     /* 快应用特有相关 */
     "quickapp" : {},

@@ -5,10 +5,10 @@
 		@scrollEnd="scrollEnd"
 		@scrollStart="scrollStart"
 		></lz-red-book>
-		
+		 
 		<!-- 遮罩层上部分 -->
 		<view class="mask-top" :style="{top:mask.showMask?0:-100+'upx','background':mask.background}">
-			<view style="letter-spacing: 10px; line-height: 20px;">usahfufasijdiajij</view>
+			<!-- <view style="letter-spacing: 10px; line-height: 20px;">usahfufasijdiajij</view> -->
 		</view>
 		<!-- 遮罩层下部分 -->
 		<view class="mask-bottom" :style="{bottom:mask.showMask?0:-300+'upx','background':mask.background}">
@@ -43,8 +43,7 @@
 
 <script>
 import lzRedBook from "@/components/components/lz-red-book/lz-red-book.vue";
-// import uniPagination from "@/components/uni-pagination/uni-pagination.vue";
-// import lzRedBook from "@/components/components/lz-red-book/lz-red-book.vue";
+import uniPagination from "@/components/uni-pagination/uni-pagination.vue";
 import uniIcons from '@/components/components/uni-icons/uni-icons.vue'
 import uniSwiperDot from '@/components/components/uni-swiper-dot/uni-swiper-dot.vue'
 import uniTag from '@/components/components/uni-tag/uni-tag.vue'
@@ -105,30 +104,27 @@ export default {
 				}
 			],
 			//正文
-			content_text:''
-				
+			content_text:'111'				
 		};
 	},
 	onLoad(option) {
 		// #ifdef APP-PLUS
 		plus.navigator.setFullscreen(true);//隐藏状态栏
 		//#endif
+		var that = this
 uni.request({
     url: 'http://api.pingcc.cn/fictionContent/search/11194558', //仅为示例，并非真实接口地址。
-
-    success: (res) => {
-     
-        this.content_text = res.data.data.data.content;
+    success: (res) => {    
+        this.content_text = res.data.data.data.content;	
+		// console.log(this.content_text)
     }
 });
 	},
-	methods: {
-		
+	methods: {	
 		//点击中间
 		clickCenter(){
 			let that=this
-			that.mask.showMask=!that.mask.showMask
-			console.log(this.content_text)
+			that.mask.showMask=!that.mask.showMask		
 		},
 		//滚动到最后一页
 		scrollEnd(){

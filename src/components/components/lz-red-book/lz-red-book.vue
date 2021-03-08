@@ -72,6 +72,9 @@ export default {
 			},
 		};
 	},
+	activated(){
+		this.init()
+	},
 	mounted() {
 		//初始化
 		this.init()
@@ -118,6 +121,7 @@ export default {
 		//循环获取一页多少文字，默认从100个字，然后动态获取文字内容高度与屏幕高度对比，如果文字高度小于屏幕高度，就加40个字
 		forGet(){
 			let that=this
+			console.log(forNum)
 			that.bookTextNew=copyBookText.substr(0,forNum)
 			let String=copyBookText.substr(forNum)
 			if(String.length>0){//如果一章大于100个字
@@ -137,7 +141,6 @@ export default {
 					}).exec();
 				})
 			}else{
-				// console.log(copyBookText);
 				that.isEndFor=true
 				that.swiper.bookTextArr.push(copyBookText)
 			}
@@ -153,7 +156,6 @@ export default {
 				that.isEndFor=true
 				that.swiper.bookTextArr.push(copyBookText)
 			}
-			// console.log(that.swiper.bookTextArr);
 		},
 		//滑动时触发
 		change(e) {

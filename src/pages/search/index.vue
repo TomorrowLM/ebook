@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :style="{'padding-top':StatusBarHeight +'px'}">
     <uni-search-bar></uni-search-bar>
     <view class="content">
       <!-- <v-tabs v-model="current" :tabs="tabs" @change="changeTab"></v-tabs> -->
@@ -14,6 +14,7 @@ import vTab from '@/components/v-tabs/v-tabs.vue'
 export default {
   data() {
     return {
+	  StatusBarHeight:0,
       tabs: [
         "小说",
         "文学",
@@ -35,6 +36,13 @@ export default {
 //     });
 //   }
 // });
+  	const that = this;
+  		uni.getSystemInfo({
+  			success(res) {
+  				that.StatusBarHeight = res.statusBarHeight;
+  				console.log(res.statusBarHeight)
+  			}
+  		})
   },
   activated() {
     document.getElementsByTagName('uni-page-wrapper')[0].style.background = 'white'
