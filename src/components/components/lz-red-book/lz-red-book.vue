@@ -98,9 +98,10 @@ export default {
 		init(){
 			let that=this
 			that.isEndFor=false
-			copyBookText=this.bookText
-
-			console.log(typeof copyBookText)
+			
+			copyBookText=this.bookText.join('')
+			
+			// console.log(Object.prototype.toString.call(copyBookText)) 
 			that.swiper.bookTextArr=[]
 			// 获取元素信息
 			that.getSystemInfo();

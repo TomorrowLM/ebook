@@ -16,7 +16,7 @@
       "path": "pages/search/index",
       "style": {
         "navigationBarTitleText": "search",
-        "enablePullDownRefresh": true,
+        "enablePullDownRefresh": false,
         // 下拉刷新
         "pullToRefresh": false,
         "animationType": "pop-in",
@@ -29,7 +29,7 @@
       "path": "pages/mine/index",
       "style": {
         "navigationBarTitleText": "mine",
-        "enablePullDownRefresh": true,
+        "enablePullDownRefresh": false,
         // 下拉刷新
         "pullToRefresh": {},
         "animationType": "pop-in",
