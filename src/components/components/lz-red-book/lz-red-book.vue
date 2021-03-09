@@ -4,8 +4,9 @@
 		<swiper class="swiper-box" @change="change" @animationfinish="animationfinish" :current="0" :vertical="scrollDirection=='leftRight'?false:true" :skip-hidden-item-layout="true" :style="{height:set.screenHeight+'px'}">
 			<swiper-item v-for="(item ,index) in swiper.bookTextArr" :key="index">
 				<view class="swiper-item">
-					<view class="swiper-text">
-						{{item}}
+					<view class="swiper-text" v-html="item">
+						<!-- {{item}} -->
+						
 					</view>
 					<!-- 底部电池部分 -->
 					<view class="item-footer" :style="bookStyle">
@@ -33,8 +34,8 @@ let copyBookText='',forNum=100,addNum=400,reduceNum=400//默认一页从100个�
 export default {
 	props: {
 		bookText: {
-			type: String,
-			default: ''
+			// type: String,
+			// default: ''
 		},
 		bookStyle: {
 			//书的样式
@@ -49,6 +50,11 @@ export default {
 			default: 'leftRight'
 		},
 	},
+	watch: {
+			bookText(newValue, oldValue) {
+				this.init()
+			},
+		},
 	data() {
 		return {
 			set:{
@@ -72,9 +78,6 @@ export default {
 			},
 		};
 	},
-	activated(){
-		this.init()
-	},
 	mounted() {
 		//初始化
 		this.init()
@@ -96,6 +99,8 @@ export default {
 			let that=this
 			that.isEndFor=false
 			copyBookText=this.bookText
+
+			console.log(typeof copyBookText)
 			that.swiper.bookTextArr=[]
 			// 获取元素信息
 			that.getSystemInfo();
