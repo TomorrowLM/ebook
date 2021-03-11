@@ -30,7 +30,7 @@
 
 <script>
 let DLTime, timeInter;
-let copyBookText='',forNum=100,addNum=400,reduceNum=400//默认一页从100个字开始计算，超出就减少，少了就增加
+let copyBookText='',forNum=120,addNum=400,reduceNum=400//默认一页从100个字开始计算，超出就减少，少了就增加
 export default {
 	props: {
 		bookText: {
@@ -96,11 +96,10 @@ export default {
 	methods: {
 		//初始化
 		init(){
+			console.log(this)
 			let that=this
-			that.isEndFor=false
-			
-			copyBookText=this.bookText.join('')
-			
+			that.isEndFor=false			
+			copyBookText=this.bookText		
 			// console.log(Object.prototype.toString.call(copyBookText)) 
 			that.swiper.bookTextArr=[]
 			// 获取元素信息
@@ -114,8 +113,8 @@ export default {
 					that.set.screenHeight = res.screenHeight;
 					that.set.screenWidth = res.screenWidth;
 					//动态计算每一页文字数
-					if(copyBookText.length>100){
-						forNum=100
+					if(copyBookText.length>160){
+						forNum=160
 						that.forGet()//默认100个字起步
 					}else{
 						that.isEndFor=true
@@ -127,7 +126,6 @@ export default {
 		//循环获取一页多少文字，默认从100个字，然后动态获取文字内容高度与屏幕高度对比，如果文字高度小于屏幕高度，就加40个字
 		forGet(){
 			let that=this
-			console.log(forNum)
 			that.bookTextNew=copyBookText.substr(0,forNum)
 			let String=copyBookText.substr(forNum)
 			if(String.length>0){//如果一章大于100个字
@@ -155,8 +153,8 @@ export default {
 		getNextPage(){
 			let that=this
 			// debugger
-			if(copyBookText.length>100){
-				forNum=100
+			if(copyBookText.length>120){
+				forNum=120
 				that.forGet()//默认100个字起步
 			}else{
 				that.isEndFor=true

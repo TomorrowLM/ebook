@@ -19,20 +19,20 @@
     ></lz-red-book>
 
     <!-- 遮罩层上部分 -->
-    <view
+    <!-- <view
       class="mask-top"
       :style="{
         top: mask.showMask ? 0 : -100 + 'upx',
         background: mask.background,
       }"
-    >
-      <!-- <view style="letter-spacing: 10px; line-height: 20px;">usahfufasijdiajij</view> -->
-    </view>
+    ></view> -->
+    <!-- <view style="letter-spacing: 10px; line-height: 20px;">usahfufasijdiajij</view> -->
+
     <!-- 遮罩层下部分 -->
     <view
       class="mask-bottom"
       :style="{
-        bottom: mask.showMask ? 0 : -300 + 'upx',
+        bottom: mask.showMask ? 0 : -350 + 'upx',
         background: mask.background,
       }"
     >
@@ -102,10 +102,32 @@
         </view>
       </view>
       <view class="v3">
-        <view class="v3-item">
+        <view class="v3-item" @click="showDrawer('showLeft')">
           <uni-icons type="settings" size="20"></uni-icons>目录
         </view>
       </view>
+     <div style="height:100vh;overflow:hidden">
+        <uni-drawer
+        ref="showLeft"
+        mode="left"
+        :width="180"
+        @change="change($event, 'showLeft')"
+       
+      >
+        <!-- <view class="imgInch" @click="goToMine">
+        <cmd-cel-item slot-right>
+          <cmd-avatar
+            src="https://avatar.bbs.miui.com/images/noavatar_small.gif"
+          ></cmd-avatar>
+        </cmd-cel-item>
+      </view> -->
+        <div style="height:100vh;overflow:scroll">
+          <button class=""  v-for="(value,index) in chapterHeader" :key="index">
+          <p style="font-size:13px;line-height: 22px;">{{value}}</p>
+        </button>
+        </div>
+      </uni-drawer>
+     </div>
     </view>
   </view>
 </template>
@@ -117,6 +139,7 @@ import uniIcons from "@/components/components/uni-icons/uni-icons.vue";
 import uniSwiperDot from "@/components/components/uni-swiper-dot/uni-swiper-dot.vue";
 import uniTag from "@/components/components/uni-tag/uni-tag.vue";
 import axios from "axios";
+import uniDrawer from "@/components/uni-drawer/uni-drawer.vue";
 
 export default {
   data() {
@@ -173,7 +196,9 @@ export default {
         },
       ],
       //正文
-      content_text: "",
+      content_text: '',
+      chapterMuneId: [],
+      chapterHeader:[]
     };
   },
   onLoad(option) {
@@ -184,16 +209,47 @@ export default {
     uni.request({
       url: "http://api.pingcc.cn/fictionContent/search/11194558", //仅为示例，并非真实接口地址。
       success: (res) => {
-        this.content_text = res.data.data.data.content;
+        this.content_text = res.data.data.data.content.join("");
+
         // console.log(this.content_text)
       },
     });
   },
+  mounted() {
+    this.init();
+  },
   methods: {
+    init() {
+      uni.request({
+        url: "http://api.pingcc.cn/fictionChapter/search/11602", //仅为示例，并非真实接口地址。
+        success: (res) => {
+          let a = res.data.data.data;
+          let chapterLength = res.data.data.count;
+          for (let i = 0; i < chapterLength - 1; i++) {
+            this.chapterMuneId.push(a[i]["chapterId"]);
+            this.chapterHeader.push(a[i]["title"]);
+          }
+        },
+      });
+      
+    },
+    showDrawer(e) {
+      this.$refs[e].open();
+    },
+    // 抽屉状态发生变化触发
+    change(e, type) {
+      // console.log(Page.path);
+      // console.log(
+      //   (type === "showLeft" ? "左窗口" : "右窗口") + (e ? "打开" : "关闭")
+      // );
+      this[type] = e;
+    },
     //点击中间
     clickCenter() {
       let that = this;
       that.mask.showMask = !that.mask.showMask;
+      
+
     },
     //滚动到最后一页
     scrollEnd() {
@@ -241,11 +297,16 @@ export default {
     uniIcons,
     uniSwiperDot,
     uniTag,
+    uniDrawer,
   },
 };
 </script>
 
 <style scoped lang="scss">
+.menuBar{
+   overflow-y: scroll;
+   height: 100vh;
+}
 .redBook {
   width: 100%;
   height: 100%;
@@ -260,7 +321,7 @@ export default {
   }
   .mask-bottom {
     position: fixed;
-    height: 300upx;
+    height: 350upx;
     transition: all 0.2s;
     width: 100%;
     z-index: 1000;
