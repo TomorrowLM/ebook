@@ -7,7 +7,7 @@
 			</view>
 			<!-- #endif -->
 			<!-- #ifndef MP-ALIPAY -->
-			<uni-icons color="#999999" class="uni-searchbar__box-icon-search" size="18" type="search" />
+			<uni-icons color="#999999" class="uni-searchbar__box-icon-search" size="18" type="search" @click="searchBook"/>
 			<!-- #endif -->
 			<input v-if="show" :focus="showSync" :placeholder="placeholder" :maxlength="maxlength" @confirm="confirm" class="uni-searchbar__box-search-input"
 			 confirm-type="search" type="text" v-model="searchVal" />
@@ -17,6 +17,7 @@
 			</view>
 		</view>
 		<text @click="cancel" class="uni-searchbar__cancel" v-if="cancelButton ==='always' || show && cancelButton ==='auto'">{{cancelText}}</text>
+		
 	</view>
 </template>
 
@@ -61,7 +62,8 @@
 			return {
 				show: false,
 				showSync: false,
-				searchVal: ""
+				searchVal: "",
+				textObj:[]
 			}
 		},
 		watch: {
@@ -72,11 +74,22 @@
 			}
 		},
 		methods: {
+			searchBook() {
+				console.log(2)
+				this.$emit('search',this.searchVal)
+			},
 			searchClick() {
+				// console.log(this.searchVal)
+				// uni.request({	
+				//   url: "http://api.pingcc.cn/fiction/search/title/"+this.searchVal, //仅为示例，并非真实接口地址。
+				//   success: (res) => {
+				//     this.textObj = res.data.data.data
+				//   },
+				// });
 				if (this.show) {
 					return
 				}
-				this.searchVal = ""
+				this.searchVal = "" 
 				this.show = true;
 				this.$nextTick(() => {
 					this.showSync = true;

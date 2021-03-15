@@ -1,373 +1,330 @@
 <template>
-  <view
-    class="redBook"
-    :style="{ height: set.screenHeight, background: set.background }"
-  >
-    <lz-red-book
-      ref="lzRedBook"
-      :bookText="content_text"
-      :scrollDirection="set.scrollDirection"
-      :bookStyle="{
+	<view class="redBook" :style="{ height: set.screenHeight, background: set.background }">
+		<lz-red-book ref="lzRedBook" :bookText="content_text" :scrollDirection="set.scrollDirection" :chapterMuneId="chapterMuneIdIndex"
+		 :bookStyle="{
         background: set.background,
         'font-size': set.fontSize + 'px',
         'line-height': set.lineHeight + 'px',
         color: set.fontColor,
       }"
-      @clickCenter="clickCenter"
-      @scrollEnd="scrollEnd"
-      @scrollStart="scrollStart"
-    ></lz-red-book>
+		 @clickCenter="clickCenter" @scrollEnd="scrollEnd" @scrollStart="scrollStart"></lz-red-book>
 
-    <!-- 遮罩层上部分 -->
-    <!-- <view
+		<!-- 遮罩层上部分 -->
+		<!-- <view
       class="mask-top"
       :style="{
         top: mask.showMask ? 0 : -100 + 'upx',
         background: mask.background,
       }"
     ></view> -->
-    <!-- <view style="letter-spacing: 10px; line-height: 20px;">usahfufasijdiajij</view> -->
+		<!-- <view style="letter-spacing: 10px; line-height: 20px;">usahfufasijdiajij</view> -->
 
-    <!-- 遮罩层下部分 -->
-    <view
-      class="mask-bottom"
-      :style="{
+		<!-- 遮罩层下部分 -->
+		<view class="mask-bottom" :style="{
         bottom: mask.showMask ? 0 : -350 + 'upx',
         background: mask.background,
-      }"
-    >
-      <view class="v1">
-        <view class="slider-warp">
-          字体：
-          <slider
-            class="slider"
-            block-size="20"
-            activeColor="#FFCC33"
-            :step="2"
-            backgroundColor="#000000"
-            block-color="#8A6DE9"
-            :value="set.fontSize"
-            @change="sliderChange($event, 'fontSize')"
-            min="18"
-            max="30"
-          />
-        </view>
-        <view class="slider-warp">
-          间距：
-          <slider
-            class="slider"
-            block-size="20"
-            activeColor="#FFCC33"
-            :step="2"
-            backgroundColor="#000000"
-            block-color="#8A6DE9"
-            :value="set.lineHeight"
-            @change="sliderChange($event, 'padding')"
-            min="26"
-            max="40"
-          />
-        </view>
-      </view>
-      <view class="v1">
-        滚动方向：
-        <uni-tag
-          text="左右"
-          :inverted="set.scrollDirection == 'topBottom' ? true : false"
-          type="primary"
-          @click="changeScrollDirection('leftRight')"
-          size="small"
-        />
-        <uni-tag
-          text="上下"
-          :inverted="set.scrollDirection == 'leftRight' ? true : false"
-          type="primary"
-          @click="changeScrollDirection('topBottom')"
-          size="small"
-          style="color: #333333; margin-left: 10px"
-        />
-      </view>
-      <view class="v2">
-        <view
-          v-for="(item, index) in arr"
-          :key="index"
-          :class="mask.backgroundIndex == index ? 'color-warp' : ''"
-          class="v1-color"
-          @click="changeBackground(index)"
-        >
-          <uni-icons
-            type="smallcircle-filled"
-            size="26"
-            :color="item.color"
-          ></uni-icons>
-        </view>
-      </view>
-      <view class="v3">
-        <view class="v3-item" @click="showDrawer('showLeft')">
-          <uni-icons type="settings" size="20"></uni-icons>目录
-        </view>
-      </view>
-     <div style="height:100vh;overflow:hidden">
-        <uni-drawer
-        ref="showLeft"
-        mode="left"
-        :width="180"
-        @change="change($event, 'showLeft')"
-       
-      >
-        <!-- <view class="imgInch" @click="goToMine">
+      }">
+			<view class="v1">
+				<view class="slider-warp">
+					字体：
+					<slider class="slider" block-size="20" activeColor="#FFCC33" :step="2" backgroundColor="#000000" block-color="#8A6DE9"
+					 :value="set.fontSize" @change="sliderChange($event, 'fontSize')" min="18" max="30" />
+				</view>
+				<view class="slider-warp">
+					间距：
+					<slider class="slider" block-size="20" activeColor="#FFCC33" :step="2" backgroundColor="#000000" block-color="#8A6DE9"
+					 :value="set.lineHeight" @change="sliderChange($event, 'padding')" min="26" max="40" />
+				</view>
+			</view>
+			<view class="v1">
+				滚动方向：
+				<uni-tag text="左右" :inverted="set.scrollDirection == 'topBottom' ? true : false" type="primary" @click="changeScrollDirection('leftRight')"
+				 size="small" />
+				<uni-tag text="上下" :inverted="set.scrollDirection == 'leftRight' ? true : false" type="primary" @click="changeScrollDirection('topBottom')"
+				 size="small" style="color: #333333; margin-left: 10px" />
+			</view>
+			<view class="v2">
+				<view v-for="(item, index) in arr" :key="index" :class="mask.backgroundIndex == index ? 'color-warp' : ''" class="v1-color"
+				 @click="changeBackground(index)">
+					<uni-icons type="smallcircle-filled" size="26" :color="item.color"></uni-icons>
+				</view>
+			</view>
+			<view class="v3">
+				<view class="v3-item" @click="showDrawer('showLeft')">
+					<uni-icons type="settings" size="20"></uni-icons>目录
+				</view>
+			</view>
+			<div style="height:100vh;overflow:hidden">
+				<uni-drawer ref="showLeft" mode="left" :width="180" @change="change($event, 'showLeft')">
+					<!-- <view class="imgInch" @click="goToMine">
         <cmd-cel-item slot-right>
           <cmd-avatar
             src="https://avatar.bbs.miui.com/images/noavatar_small.gif"
           ></cmd-avatar>
         </cmd-cel-item>
       </view> -->
-        <div style="height:100vh;overflow:scroll">
-          <button class=""  v-for="(value,index) in chapterHeader" :key="index">
-          <p style="font-size:13px;line-height: 22px;">{{value}}</p>
-        </button>
-        </div>
-      </uni-drawer>
-     </div>
-    </view>
-  </view>
+					<scroll-view style="height:100vh;overflow:scroll" scroll-y="true">
+						<view v-for="(value,index) in chapterHeader" :key="index">
+							<button class="" @click="chapterChoose(index)">
+								<p style="font-size:13px;line-height: 22px;">{{value}}</p>
+							</button>
+						</view>
+					</scroll-view>
+				</uni-drawer>
+			</div>
+		</view>
+	</view>
 </template>
 
 <script>
-import lzRedBook from "@/components/components/lz-red-book/lz-red-book.vue";
-import uniPagination from "@/components/uni-pagination/uni-pagination.vue";
-import uniIcons from "@/components/components/uni-icons/uni-icons.vue";
-import uniSwiperDot from "@/components/components/uni-swiper-dot/uni-swiper-dot.vue";
-import uniTag from "@/components/components/uni-tag/uni-tag.vue";
-import axios from "axios";
-import uniDrawer from "@/components/uni-drawer/uni-drawer.vue";
+	import lzRedBook from "@/components/components/lz-red-book/lz-red-book.vue";
+	import uniPagination from "@/components/uni-pagination/uni-pagination.vue";
+	import uniIcons from "@/components/components/uni-icons/uni-icons.vue";
+	import uniSwiperDot from "@/components/components/uni-swiper-dot/uni-swiper-dot.vue";
+	import uniTag from "@/components/components/uni-tag/uni-tag.vue";
+	import axios from "axios";
+	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue";
 
-export default {
-  data() {
-    return {
-      mask: {
-        //遮罩层
-        showMask: false,
-        background: "#fff",
-        backgroundIndex: 0,
-      },
-      set: {
-        background: "#f0f0f0", //页面背景颜色
-        fontSize: 18, //字体大小
-        lineHeight: 33, //字体间距
-        fontColor: "#000", //字体颜色
-        scrollDirection: "leftRight", //滚动方向leftRight左右，上下topBottom
-      },
-      arr: [
-        {
-          background: "#f0f0f0", //背景色
-          maskBg: "#fff", //遮罩层色
-          fontColor: "#524d51", //字体颜色
-          color: "#f5f5f5", //选择圆圈颜色
-        },
-        {
-          background: "#d8c9aa", //背景色
-          maskBg: "#f3e4c3", //遮罩层色
-          fontColor: "#3c2506", //字体颜色
-          color: "#e0d1aa", //选择圆圈颜色
-        },
-        {
-          background: "#daba94", //背景色
-          maskBg: "#f8dcb4", //遮罩层色
-          fontColor: "#3c2506", //字体颜色
-          color: "#d8b784", //选择圆圈颜色
-        },
-        {
-          background: "#cfb793", //背景色
-          maskBg: "#f8dcb4", //遮罩层色
-          fontColor: "#674923", //字体颜色
-          color: "#d6b781", //选择圆圈颜色
-        },
-        {
-          background: "#aac9aa", //背景色
-          maskBg: "#cdeccd", //遮罩层色
-          fontColor: "#2c1e1e", //字体颜色
-          color: "#abcaab", //选择圆圈颜色
-        },
-        {
-          background: "#333b3d", //背景色
-          maskBg: "#313439", //遮罩层色
-          fontColor: "#7e8894", //字体颜色
-          color: "#626a75", //选择圆圈颜色
-        },
-      ],
-      //正文
-      content_text: '',
-      chapterMuneId: [],
-      chapterHeader:[]
-    };
-  },
-  onLoad(option) {
-    // #ifdef APP-PLUS
-    plus.navigator.setFullscreen(true); //隐藏状态栏
-    //#endif
-    var that = this;
-    uni.request({
-      url: "http://api.pingcc.cn/fictionContent/search/11194558", //仅为示例，并非真实接口地址。
-      success: (res) => {
-        this.content_text = res.data.data.data.content.join("");
+	export default {
+		data() {
+			return {
+				mask: {
+					//遮罩层
+					showMask: false,
+					background: "#fff",
+					backgroundIndex: 0,
+				},
+				set: {
+					background: "#f0f0f0", //页面背景颜色
+					fontSize: 18, //字体大小
+					lineHeight: 33, //字体间距
+					fontColor: "#000", //字体颜色
+					scrollDirection: "leftRight", //滚动方向leftRight左右，上下topBottom
+				},
+				arr: [{
+						background: "#f0f0f0", //背景色
+						maskBg: "#fff", //遮罩层色
+						fontColor: "#524d51", //字体颜色
+						color: "#f5f5f5", //选择圆圈颜色
+					},
+					{
+						background: "#d8c9aa", //背景色
+						maskBg: "#f3e4c3", //遮罩层色
+						fontColor: "#3c2506", //字体颜色
+						color: "#e0d1aa", //选择圆圈颜色
+					},
+					{
+						background: "#daba94", //背景色
+						maskBg: "#f8dcb4", //遮罩层色
+						fontColor: "#3c2506", //字体颜色
+						color: "#d8b784", //选择圆圈颜色
+					},
+					{
+						background: "#cfb793", //背景色
+						maskBg: "#f8dcb4", //遮罩层色
+						fontColor: "#674923", //字体颜色
+						color: "#d6b781", //选择圆圈颜色
+					},
+					{
+						background: "#aac9aa", //背景色
+						maskBg: "#cdeccd", //遮罩层色
+						fontColor: "#2c1e1e", //字体颜色
+						color: "#abcaab", //选择圆圈颜色
+					},
+					{
+						background: "#333b3d", //背景色
+						maskBg: "#313439", //遮罩层色
+						fontColor: "#7e8894", //字体颜色
+						color: "#626a75", //选择圆圈颜色
+					},
+				],
+				//正文
+				content_text: '',
+				chapterMuneId: [],
+				chapterHeader: [],
+				chapterMuneIdIndex: []
+			};
+		},
+		onLoad(option) {
+			// #ifdef APP-PLUS
+			plus.navigator.setFullscreen(true); //隐藏状态栏
+			//#endif
+			var that = this;
+			uni.request({
+				url: "http://api.pingcc.cn/fictionContent/search/11194558", //仅为示例，并非真实接口地址。
+				success: (res) => {
+					this.content_text = res.data.data.data.content.join("");
+					// console.log(this.content_text)
+				},
+			});
+		},
+		mounted() {
+			this.init();
+		},
+		methods: {
+			chapterChoose(index) {
+				uni.request({
+					url: "http://api.pingcc.cn/fictionContent/search/" + this.chapterMuneId[index], //仅为示例，并非真实接口地址。
+					success: (res) => {
+						this.content_text = res.data.data.data.content.join("");
+						this.chapterMuneIdIndex = this.chapterMuneId[index]
+					},
+				});
+			},
+			init() {
+				uni.request({
+					url: "http://api.pingcc.cn/fictionChapter/search/11602", //仅为示例，并非真实接口地址。
+					success: (res) => {
+						let a = res.data.data.data;
+						let chapterLength = res.data.data.count;
+						for (let i = 0; i < chapterLength - 1; i++) {
+							this.chapterMuneId.push(a[i]["chapterId"]);
+							this.chapterHeader.push(a[i]["title"]);
+						}
+					},
+				});
 
-        // console.log(this.content_text)
-      },
-    });
-  },
-  mounted() {
-    this.init();
-  },
-  methods: {
-    init() {
-      uni.request({
-        url: "http://api.pingcc.cn/fictionChapter/search/11602", //仅为示例，并非真实接口地址。
-        success: (res) => {
-          let a = res.data.data.data;
-          let chapterLength = res.data.data.count;
-          for (let i = 0; i < chapterLength - 1; i++) {
-            this.chapterMuneId.push(a[i]["chapterId"]);
-            this.chapterHeader.push(a[i]["title"]);
-          }
-        },
-      });
-      
-    },
-    showDrawer(e) {
-      this.$refs[e].open();
-    },
-    // 抽屉状态发生变化触发
-    change(e, type) {
-      // console.log(Page.path);
-      // console.log(
-      //   (type === "showLeft" ? "左窗口" : "右窗口") + (e ? "打开" : "关闭")
-      // );
-      this[type] = e;
-    },
-    //点击中间
-    clickCenter() {
-      let that = this;
-      that.mask.showMask = !that.mask.showMask;
-      
+			},
+			showDrawer(e) {
+				this.$refs[e].open();
+			},
+			// 抽屉状态发生变化触发
+			change(e, type) {
+				this[type] = e;
+			},
+			//点击中间
+			clickCenter() {
 
-    },
-    //滚动到最后一页
-    scrollEnd() {
-      uni.showToast({
-        title: "最后一页了",
-      });
-    },
-    //滚动到第一页
-    scrollStart() {
-      uni.showToast({
-        title: "第一页",
-      });
-    },
-    //滑块设置字体间距或大小
-    sliderChange(e, type) {
-      let that = this;
-      that.$refs.lzRedBook.init();
-      if (type == "fontSize") {
-        // console.log('value 发生变化：' + e.detail.value)
-        that.set.fontSize = e.detail.value;
-      } else {
-        that.set.lineHeight = e.detail.value;
-      }
-      //重新计算页面页数
-      uni.$emit("lz-red-book-change");
-    },
-    //修改滚动方向
-    changeScrollDirection(text) {
-      let that = this;
-      that.set.scrollDirection = text;
-      //重新计算页面页数
-      uni.$emit("lz-red-book-change", "changeScrollDirection");
-    },
-    //修改背景颜色
-    changeBackground(index) {
-      let that = this;
-      that.mask.backgroundIndex = index;
-      that.set.background = that.arr[index].background; //背景颜色
-      that.set.fontColor = that.arr[index].fontColor; //字体颜色
-      that.mask.background = that.arr[index].maskBg; //遮罩背景色
-    },
-  },
-  components: {
-    lzRedBook,
-    uniIcons,
-    uniSwiperDot,
-    uniTag,
-    uniDrawer,
-  },
-};
+				let that = this;
+				that.mask.showMask = !that.mask.showMask;
+			},
+			//滚动到最后一页
+			scrollEnd() {
+				uni.showToast({
+					title: "最后一页了",
+				});
+			},
+			//滚动到第一页
+			scrollStart() {
+				uni.showToast({
+					title: "第一页",
+				});
+			},
+			//滑块设置字体间距或大小
+			sliderChange(e, type) {
+				let that = this;
+				that.$refs.lzRedBook.init();
+				if (type == "fontSize") {
+					// console.log('value 发生变化：' + e.detail.value)
+					that.set.fontSize = e.detail.value;
+				} else {
+					that.set.lineHeight = e.detail.value;
+				}
+				//重新计算页面页数
+				uni.$emit("lz-red-book-change");
+			},
+			//修改滚动方向
+			changeScrollDirection(text) {
+				let that = this;
+				that.set.scrollDirection = text;
+				//重新计算页面页数
+				uni.$emit("lz-red-book-change", "changeScrollDirection");
+			},
+			//修改背景颜色
+			changeBackground(index) {
+				let that = this;
+				that.mask.backgroundIndex = index;
+				that.set.background = that.arr[index].background; //背景颜色
+				that.set.fontColor = that.arr[index].fontColor; //字体颜色
+				that.mask.background = that.arr[index].maskBg; //遮罩背景色
+			},
+		},
+		components: {
+			lzRedBook,
+			uniIcons,
+			uniSwiperDot,
+			uniTag,
+			uniDrawer,
+		},
+	};
 </script>
 
 <style scoped lang="scss">
-.menuBar{
-   overflow-y: scroll;
-   height: 100vh;
-}
-.redBook {
-  width: 100%;
-  height: 100%;
-  .mask-top {
-    position: fixed;
-    height: 40upx;
-    transition: all 0.2s;
-    width: 100%;
-    z-index: 1000;
-    margin: auto;
-    border-radius: 0 0 4px 4px;
-  }
-  .mask-bottom {
-    position: fixed;
-    height: 350upx;
-    transition: all 0.2s;
-    width: 100%;
-    z-index: 1000;
-    margin: auto;
-    border-radius: 10px 10px 0 0;
-    padding: 10px;
-    box-sizing: border-box;
-    .v1 {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      .slider-warp {
-        display: flex;
-        flex: 1;
-        align-items: center;
-        .slider {
-          flex: 1;
-        }
-      }
-    }
-    .v2 {
-      display: flex;
-      width: 100%;
-      justify-content: space-around;
-      margin-top: 10px;
-      .color-warp {
-        border: 1px solid #6d583b;
-        border-radius: 50%;
-        width: 26px;
-        height: 26px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-    }
-    .v3 {
-      margin-top: 10px;
-      .v3-item {
-        width: 100px;
-        height: 30px;
-        background: #f7f7f7;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-    }
-  }
-}
+	.menuBar {
+		overflow-y: scroll;
+		height: 100vh;
+	}
+
+	.redBook {
+		width: 100%;
+		height: 100%;
+
+		.mask-top {
+			position: fixed;
+			height: 40upx;
+			transition: all 0.2s;
+			width: 100%;
+			z-index: 1000;
+			margin: auto;
+			border-radius: 0 0 4px 4px;
+		}
+
+		.mask-bottom {
+			position: fixed;
+			height: 350upx;
+			transition: all 0.2s;
+			width: 100%;
+			z-index: 1000;
+			margin: auto;
+			border-radius: 10px 10px 0 0;
+			padding: 10px;
+			box-sizing: border-box;
+
+			.v1 {
+				width: 100%;
+				display: flex;
+				align-items: center;
+
+				.slider-warp {
+					display: flex;
+					flex: 1;
+					align-items: center;
+
+					.slider {
+						flex: 1;
+					}
+				}
+			}
+
+			.v2 {
+				display: flex;
+				width: 100%;
+				justify-content: space-around;
+				margin-top: 10px;
+
+				.color-warp {
+					border: 1px solid #6d583b;
+					border-radius: 50%;
+					width: 26px;
+					height: 26px;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				}
+			}
+
+			.v3 {
+				margin-top: 10px;
+
+				.v3-item {
+					width: 100px;
+					height: 30px;
+					background: #f7f7f7;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				}
+			}
+		}
+	}
 </style>

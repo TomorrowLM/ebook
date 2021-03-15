@@ -30,7 +30,7 @@
 
 <script>
 let DLTime, timeInter;
-let copyBookText='',forNum=120,addNum=400,reduceNum=400//默认一页从100个字开始计算，超出就减少，少了就增加
+let copyBookText='',forNum,addNum=400,reduceNum=400//默认一页从100个字开始计算，超出就减少，少了就增加
 export default {
 	props: {
 		bookText: {
@@ -49,6 +49,12 @@ export default {
 			type: String,
 			default: 'leftRight'
 		},
+		chapterMuneIdIndex:{
+			
+		},
+		chapterMuneId:{
+			
+		}
 	},
 	watch: {
 			bookText(newValue, oldValue) {
@@ -93,14 +99,12 @@ export default {
 		}, 1000);
 		// #endif
 	},
-	methods: {
+		methods: {
 		//初始化
 		init(){
-			console.log(this)
 			let that=this
 			that.isEndFor=false			
 			copyBookText=this.bookText		
-			// console.log(Object.prototype.toString.call(copyBookText)) 
 			that.swiper.bookTextArr=[]
 			// 获取元素信息
 			that.getSystemInfo();
@@ -113,9 +117,9 @@ export default {
 					that.set.screenHeight = res.screenHeight;
 					that.set.screenWidth = res.screenWidth;
 					//动态计算每一页文字数
-					if(copyBookText.length>160){
+					if(copyBookText.length>180){ 
 						forNum=160
-						that.forGet()//默认100个字起步
+						that.forGet()//默认160个字起步
 					}else{
 						that.isEndFor=true
 						that.swiper.bookTextArr.push(copyBookText)
@@ -123,10 +127,11 @@ export default {
 				}
 			});
 		},
-		//循环获取一页多少文字，默认从100个字，然后动态获取文字内容高度与屏幕高度对比，如果文字高度小于屏幕高度，就加40个字
+		//循环获取一页多少文字，默认从160个字，然后动态获取文字内容高度与屏幕高度对比，如果文字高度小于屏幕高度，就加40个字
 		forGet(){
 			let that=this
 			that.bookTextNew=copyBookText.substr(0,forNum)
+			// console.log(forNum)
 			let String=copyBookText.substr(forNum)
 			if(String.length>0){//如果一章大于100个字
 				that.$nextTick(function(){
@@ -170,11 +175,17 @@ export default {
 		},
 		animationfinish(){
 			if(this.swiper.isEnd){
-				console.log('已经划到最后一个了');
-				this.$emit('scrollEnd');
+				// uni.request({
+				//   url: "http://api.pingcc.cn/fictionContent/search/"+this.chapterMuneIdIndex, //仅为示例，并非真实接口地址。
+				//   success: (res) => {
+				//     this.bookText = res.data.data.data.content.join("");
+				// 	this.chapterMuneIdIndex=this.chapterMuneId[index+1]
+				//   },
+				// });
+				// this.init()
+				// this.$emit('scrollEnd');
 			}
 			if(this.swiper.isStart){
-				console.log('已经划到最开始');
 				this.$emit('scrollStart');
 			}
 			if(this.swiper.pageNum==this.swiper.bookTextArr.length){
@@ -228,8 +239,6 @@ export default {
 			this.swiper.isStart=false
 			this.$emit('clickCenter');
 		}
-		
-		
 	}
 };
 </script>

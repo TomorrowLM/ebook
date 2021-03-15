@@ -79,8 +79,8 @@
       /**
        * 提交按钮点击执行
        */
-      fnForgot() {
-        console.log(JSON.stringify(this.mobile));
+      fnForgot() { 
+        // console.log(JSON.stringify(this.mobile));
       },
       /**
        * 获取验证码

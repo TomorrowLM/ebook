@@ -29,7 +29,7 @@
     <view class="content">
       <view class="book-list" v-for="(book, index) in bookList" :key="index">
         <view class="book" @click="read(book.name)">
-          <img src="./../../static/book-tree.jpg" alt="" />
+          <image src="../../static/book-tree.jpg">
           <text class="text-center">{{ book.name }}</text>
         </view>
       </view>
@@ -49,10 +49,6 @@ export default {
 	  StatusBarHeight:0,
       title: "Hello",
       bookList: [
-        { name: "完美世界" },
-        { name: "斗罗大陆" },
-        { name: "春花秋月知多少" },
-        { name: "活着" },
       ],
 	  resInfo:''
     };
@@ -166,63 +162,5 @@ onPlusReady()
 </script>
 
 <style scoped>
-.content {
-  display: flex;
-  flex-direction: row;
-  padding-bottom: 14px;
-  flex-wrap: wrap;
-  font-size: 16px;
-}
-.title {
-  font-size: 36rpx;
-  color: #8f8f94;
-}
-.close {
-  position: relative;
-  top: 76vh;
-}
-.word-btn {
-  /* #ifndef APP-NVUE */
-  display: flex;
-  /* #endif */
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  height: 40px;
-  margin: 25px;
-  background-color: #219752;
-}
-.book-list {
-  width: 30%;
-  margin-left: 10px;
-  background-color: rgb(87, 177, 79);
-  float: left;
-}
-img {
-  max-width: 100%;
-  width: 100%;
-}
-.text-center {
-  display: block;
-  text-align: center;
-}
-.imgInch {
-  width: 100%;
-  height: 18%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(to right, #365fff, #36bbff);
-}
-.imgInch img {
-  width: 70%;
-  height: 80%;
-  /* text-align: center; */
-  border-radius: 100px;
-}
-button {
-  box-sizing: border-box;
-  /* border: 3px solid #55d9e6; */
-}
+	@import url("book.css");
 </style>
