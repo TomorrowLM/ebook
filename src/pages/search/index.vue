@@ -1,18 +1,20 @@
 <template>
-  <div :style="{'padding-top':StatusBarHeight +'px'}">
+<keep-alive>
+      <div :style="{'padding-top':StatusBarHeight +'px'}">
     <uni-search-bar @search="searchBook"></uni-search-bar>
 	<input type="text">
     <view class="content">
       <!-- <v-tabs v-model="current" :tabs="tabs" @change="changeTab"></v-tabs> -->
 	  <!-- <v-tabs v-model="current" :scroll="false" :tabs="tabs" @change="changeTab"></v-tabs> -->
       <view class="book-list" v-for="(book, index) in searchBooklist" :key="index">
-        <view class="book" @click="toBookdetail()">
+        <view class="book" @click="toBookdetail(book)">
           <image :src='book.cover'>
           <text class="text-center">{{ book.title }}</text>
         </view>
       </view>
     </view>
   </div>
+</keep-alive>
 </template>
 
 <script>
@@ -24,7 +26,7 @@ export default {
 		bookName:'',
 		showBook:false,
 		searchBooklist:[],
-	    StatusBarHeight:0,
+	  StatusBarHeight:0,
    //    tabs: [
    //      "小说",
    //      "文学",
@@ -61,10 +63,11 @@ export default {
 			},
 		});
 	},
-	toBookdetail(){
-		console.log(1)
+	toBookdetail(book){
+		console.log(book)
       uni.navigateTo({
-        url: "/pages/search/bookdetail"
+        // "'/pages/test/test?item='+ encodeURIComponent(JSON.stringify(item))"
+        url: "/pages/search/bookdetail?id=1&book="+encodeURIComponent(JSON.stringify(book))
       });
 	}
   },

@@ -6,7 +6,6 @@
 				uni.getSystemInfo({
 					success(res) {
 						that.globalData.statusBarHeight = res.statusBarHeight;
-						console.log(res.statusBarHeight)
 					}
 				})
 		},
@@ -17,7 +16,7 @@
 			console.log('App Hide')
 		},
 		onInit: () => {
-			console.log('1')
+			
 		}
 	}
 </script>

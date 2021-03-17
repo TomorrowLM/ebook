@@ -10,11 +10,11 @@
 		
 		<view class="main">
 			<view class="book_detail_box">
-				<image :src="book_info.image" lazy-load></image>
+				<image :src="book_info.cover" lazy-load></image>
 				<view class="book_detail">
 					<text class="book_title">{{book_info.name}}</text>
 					<view class="book_author_title">作者：<navigator :url="'/pages/searchRes/searchRes?keyword=' + book_info.author" class="book_author">{{book_info.author}}</navigator></view>
-					<text class="book_cate">类别：{{book_info.ltype}}　{{book_info.stype}}</text>
+					<text class="book_cate">类别：{{book_info.fictionType}}　{{book_info.stype}}</text>
 					<view class="rating_title">喜欢人数：
 						<text class="rating_score" v-if="book_info.remark">{{book_info.fav_num}}</text>
 						<text v-else>没人喜欢T^T</text>
@@ -24,8 +24,8 @@
 			<scroll-view class="other" scroll-y>
 				<view class="other_box">
 					<view class="other_title">简　介</view>
-					<view class="other_content" v-if="book_info.remark">{{book_info.remark}}</view>
-					<view class="other_content" v-else>暂无简介</view>
+					<view class="other_content">{{book_info.descs}}</view>
+					<!-- <view class="other_content"></view> -->
 				</view>
 				<view class="other_box">
 					<view class="other_title">书源及最新章节</view>
@@ -64,7 +64,7 @@
 				<picker class="button" :value="index" range-key="site_name" :range="book_source_info" @change="changeSource">
 			    	<view class="select_source">{{index<0 ?"选择书源":book_source_info[index].site_name}}</view>
 		  		</picker>
-				<view :class="'button ' + add_to_mybooks_style" @tap="add_fun">{{add_book_stat}}</view>
+				<view :class="'button ' + add_to_mybooks_style"  @click="addToMybooks()">{{add_book_stat}}</view>
 				<view class="button start_read" @tap="startRead">开始阅读</view>
 			</view>
 		</view>
@@ -77,9 +77,11 @@
 <script>
 import uniSearchBar from "@/components/uni-search-bar/uni-search-bar.vue";
 import vTab from '@/components/v-tabs/v-tabs.vue'
+import Person from '../../global'
 export default {
   data() { 
     return {
+		book_author:'',
 		book_info: {},
 		book_source_info: [],
 		// 书源
@@ -108,24 +110,14 @@ export default {
 	  tabIndex:'小说',
     };
   },
-  onLoad() {
-//     uni.downloadFile({
-//   url: 'https://uniapp.dcloud.io/api/file/file?id=opendocument',
-//   success: function (res) {
-//     var filePath = res.tempFilePath;
-//     uni.openDocument({
-//       filePath: filePath,
-//       success: function (res) {
-//         console.log('打开文档成功');
-//       }
-//     });
-//   }
-// });
+  onLoad(option) {
   	const that = this;
+	option.book = JSON.parse(option.book)
+  	console.log(option.book); //打印出上个页面传递的参数。
+	this.book_info = option.book
   		uni.getSystemInfo({
   			success(res) {
   				that.StatusBarHeight = res.statusBarHeight;
-  				console.log(res.statusBarHeight)
   			}
   		})
   },
@@ -137,7 +129,21 @@ export default {
       console.log("当前选中的项：" + index);
 	  this.tabIndex = this.tabs[index]
     },
-  },
+	addToMybooks(){
+		let a = new Array()
+		let b = new Array()	
+		let d = JSON.parse(localStorage.getItem('bookshelf'))
+		d.forEach((value,index)=>{
+			a.push(value)
+		})
+		b=a
+		b.push(this.book_info)
+		console.log(b)
+		localStorage.setItem('bookshelf',JSON.stringify(b))
+		console.log(typeof localStorage.getItem('bookshelf'))
+		Person.state =b
+	}
+  }, 
   components: { uniSearchBar,vTab },
 };
 </script>
@@ -262,6 +268,11 @@ export default {
 .footer{
 	border-top: 1px solid #ccc;
 	height: 8%;
+	width: 100%;
+    position: fixed;
+    left: 0px;
+    bottom: -3px;
+    border: 0
 }
 .button{
 	width: 33.333%;

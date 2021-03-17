@@ -30,7 +30,7 @@
       <view class="book-list" v-for="(book, index) in bookList" :key="index">
         <view class="book" @click="read(book.name)">
           <image src="../../static/book-tree.jpg">
-          <text class="text-center">{{ book.name }}</text>
+          <text class="text-center">{{ book.title }}</text>
         </view>
       </view>
     </view>
@@ -43,40 +43,30 @@ import uniSearchBar from "@/components/uni-search-bar/uni-search-bar.vue";
 import uniDrawer from "@/components/uni-drawer/uni-drawer.vue";
 import cmdAvatar from "@/components/cmd-person_1.1/components/cmd-avatar/cmd-avatar.vue";
 import cmdCelItem from "@/components/cmd-person_1.1/components/cmd-cell-item/cmd-cell-item.vue";
+import Person from '../../global'
 export default {
   data() {
     return {
 	  StatusBarHeight:0,
       title: "Hello",
-      bookList: [
-      ],
-	  resInfo:''
+      bookList:Person.state,
+	    resInfo:''
     };
   },
+  watch:{
+    bookList:function(newValue,old){
+      // console.log(2)
+      // this.bookList = JSON.parse(localStorage.getItem('bookshelf'))   
+    }
+  },
   onLoad() {
-  	console.log('App Launch')
   	const that = this;
   		uni.getSystemInfo({
   			success(res) {
   				that.StatusBarHeight = res.statusBarHeight;
-  				console.log(res.statusBarHeight)
   			}
   		})
   },
-  activated() {
-  //  document.getElementsByClassName('book')[0].style.backgroundColor = 'red'
-  // this.$refs.book.style.backgroundColor='red'
- },
-  activated() {
-    // document.getElementsByClassName('book')[0].style.background = 'white'
-    // document.getElementsByTagName('uni-page-wrapper')[0].style.background = 'white'
-  },
-
-  // onLoad() {
-  //   // location.reload()
-  //   console.log(document.getElementsByClassName('book'))
-    
-  // },
   methods: {
     showDrawer(e) {
       this.$refs[e].open();
@@ -156,7 +146,6 @@ onPlusReady()
       });
     },
   },
-
   components: { uniNavBar, uniSearchBar, uniDrawer, cmdAvatar, cmdCelItem },
 };
 </script>

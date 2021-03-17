@@ -7,7 +7,7 @@
         "navigationBarTitleText": "eBook",
         "enablePullDownRefresh": false,
         // 下拉刷新
-        "pullToRefresh": {},
+
         "animationType": "pop-in",
         "animationDuration": 300
       }
@@ -18,7 +18,6 @@
         "navigationBarTitleText": "search",
         "enablePullDownRefresh": false,
         // 下拉刷新
-        "pullToRefresh": false,
         "animationType": "pop-in",
         "animationDuration": 300
         // 导航栏透明设置。支持 always 一直透明 / auto 滑动自适应 / none 不透明
@@ -31,7 +30,6 @@
 	    "navigationBarTitleText": "search",
 	    "enablePullDownRefresh": false,
 	    // 下拉刷新
-	    "pullToRefresh": false,
 	    "animationType": "pop-in",
 	    "animationDuration": 300
 	    // 导航栏透明设置。支持 always 一直透明 / auto 滑动自适应 / none 不透明
@@ -44,7 +42,6 @@
         "navigationBarTitleText": "mine",
         "enablePullDownRefresh": false,
         // 下拉刷新
-        "pullToRefresh": {},
         "animationType": "pop-in",
         "animationDuration": 300
         // 导航栏透明设置。支持 always 一直透明 / auto 滑动自适应 / none 不透明
@@ -57,7 +54,6 @@
         "navigationBarTitleText": "read",
         "enablePullDownRefresh": false,
         // 下拉刷新
-        "pullToRefresh": {},
         "animationType": "pop-in",
         "animationDuration": 300
         // 导航栏透明设置。支持 always 一直透明 / auto 滑动自适应 / none 不透明
