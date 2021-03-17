@@ -49,17 +49,17 @@ export default {
     return {
 	  StatusBarHeight:0,
       title: "Hello",
-      bookList:Person.state,
+      bookList:this.$store.state.bookshelf,
 	    resInfo:''
     };
   },
   watch:{
     bookList:function(newValue,old){
-      // console.log(2)
-      // this.bookList = JSON.parse(localStorage.getItem('bookshelf'))   
+ 
     }
   },
   onLoad() {
+    console.log(this.$store.state.bookshelf)
   	const that = this;
   		uni.getSystemInfo({
   			success(res) {

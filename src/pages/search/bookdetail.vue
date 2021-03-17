@@ -130,18 +130,20 @@ export default {
 	  this.tabIndex = this.tabs[index]
     },
 	addToMybooks(){
-		let a = new Array()
-		let b = new Array()	
-		let d = JSON.parse(localStorage.getItem('bookshelf'))
-		d.forEach((value,index)=>{
-			a.push(value)
-		})
-		b=a
-		b.push(this.book_info)
-		console.log(b)
-		localStorage.setItem('bookshelf',JSON.stringify(b))
-		console.log(typeof localStorage.getItem('bookshelf'))
-		Person.state =b
+		// let a = new Array()
+		// let b = new Array()	
+		// let d = JSON.parse(localStorage.getItem('bookshelf'))
+		// d.forEach((value,index)=>{
+		// 	a.push(value)
+		// })
+		// b=a
+		// b.push(this.book_info)
+		// console.log(b)
+		// localStorage.setItem('bookshelf',JSON.stringify(b))
+		// console.log(typeof localStorage.getItem('bookshelf'))
+		// Person.state =b
+
+		this.$store.state.bookshelf.push(this.book_info)
 	}
   }, 
   components: { uniSearchBar,vTab },
