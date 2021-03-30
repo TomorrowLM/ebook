@@ -1,330 +1,386 @@
 <template>
-	<view class="redBook" :style="{ height: set.screenHeight, background: set.background }">
-		<lz-red-book ref="lzRedBook" :bookText="content_text" :scrollDirection="set.scrollDirection" :chapterMuneId="chapterMuneIdIndex"
-		 :bookStyle="{
-        background: set.background,
-        'font-size': set.fontSize + 'px',
-        'line-height': set.lineHeight + 'px',
-        color: set.fontColor,
-      }"
-		 @clickCenter="clickCenter" @scrollEnd="scrollEnd" @scrollStart="scrollStart"></lz-red-book>
+  <view class="page-head">
+    <view class="page">
+      <view class="fictionwrap" v-if="ReadContent">
+        <view
+          class="fcontent"
+          :style="{ fontSize: `${fontSize}rem` }"
+          :class="skinValue"
+          v-html="ReadContent"
+        ></view>
+      </view>
+      <uni-loading status="loading" v-else></uni-loading>
+      <!-- 屏幕居中点击层 -->
+      <view class="clickview" @tap="showopview"> </view>
 
-		<!-- 遮罩层上部分 -->
-		<!-- <view
-      class="mask-top"
-      :style="{
-        top: mask.showMask ? 0 : -100 + 'upx',
-        background: mask.background,
-      }"
-    ></view> -->
-		<!-- <view style="letter-spacing: 10px; line-height: 20px;">usahfufasijdiajij</view> -->
-
-		<!-- 遮罩层下部分 -->
-		<view class="mask-bottom" :style="{
-        bottom: mask.showMask ? 0 : -350 + 'upx',
-        background: mask.background,
-      }">
-			<view class="v1">
-				<view class="slider-warp">
-					字体：
-					<slider class="slider" block-size="20" activeColor="#FFCC33" :step="2" backgroundColor="#000000" block-color="#8A6DE9"
-					 :value="set.fontSize" @change="sliderChange($event, 'fontSize')" min="18" max="30" />
-				</view>
-				<view class="slider-warp">
-					间距：
-					<slider class="slider" block-size="20" activeColor="#FFCC33" :step="2" backgroundColor="#000000" block-color="#8A6DE9"
-					 :value="set.lineHeight" @change="sliderChange($event, 'padding')" min="26" max="40" />
-				</view>
-			</view>
-			<view class="v1">
-				滚动方向：
-				<uni-tag text="左右" :inverted="set.scrollDirection == 'topBottom' ? true : false" type="primary" @click="changeScrollDirection('leftRight')"
-				 size="small" />
-				<uni-tag text="上下" :inverted="set.scrollDirection == 'leftRight' ? true : false" type="primary" @click="changeScrollDirection('topBottom')"
-				 size="small" style="color: #333333; margin-left: 10px" />
-			</view>
-			<view class="v2">
-				<view v-for="(item, index) in arr" :key="index" :class="mask.backgroundIndex == index ? 'color-warp' : ''" class="v1-color"
-				 @click="changeBackground(index)">
-					<uni-icons type="smallcircle-filled" size="26" :color="item.color"></uni-icons>
-				</view>
-			</view>
-			<view class="v3">
-				<view class="v3-item" @click="showDrawer('showLeft')">
-					<uni-icons type="settings" size="20"></uni-icons>目录
-				</view>
-			</view>
-			<div style="height:100vh;overflow:hidden">
-				<uni-drawer ref="showLeft" mode="left" :width="180" @change="change($event, 'showLeft')">
-					<!-- <view class="imgInch" @click="goToMine">
-        <cmd-cel-item slot-right>
-          <cmd-avatar
-            src="https://avatar.bbs.miui.com/images/noavatar_small.gif"
-          ></cmd-avatar>
-        </cmd-cel-item>
-      </view> -->
-					<scroll-view style="height:100vh;overflow:scroll" scroll-y="true">
-						<view v-for="(value,index) in chapterHeader" :key="index">
-							<button class="" @click="chapterChoose(index)">
-								<p style="font-size:13px;line-height: 22px;">{{value}}</p>
-							</button>
-						</view>
-					</scroll-view>
-				</uni-drawer>
-			</div>
-		</view>
-	</view>
+      <!-- 底部弹出层 打开目录和设置 -->
+      <uni-popup ref="opbottom" type="bottom">
+        <view class="op-footer">
+          <view class="foot-wrap" @tap="openclist">
+            <fa-icon type="bars" size="22" color="#F7F7F7"></fa-icon>
+            <view class="foot-text">目录</view>
+          </view>
+          <view class="foot-wrap" @tap="opensetting">
+            <fa-icon type="cog" size="22" color="#F7F7F7"></fa-icon>
+            <view class="foot-text">设置</view>
+          </view>
+        </view>
+      </uni-popup>
+      <!-- 目录层 -->
+      <uni-drawer ref="clistdrawer" mode="left">
+        <view class="chapterwrap">
+          <view class="zjmu">章节目录</view>
+          <view class="totalnum"> 共{{ clist.length }}章</view>
+          <view class="zhengwj">正文卷</view>
+          <scroll-view
+            scroll-y="true"
+            :style="{ height: windowHeight }"
+            :scroll-into-view="viewId"
+          >
+            <view
+              class="clistwrap"
+              v-for="(item, index) in clist"
+              :key="index"
+              @tap="details(item.chapterId)"
+            >
+              <view
+                :id="'cid' + item.corder"
+                class="listitem"
+                :class="index + 1 == corder ? 'text-orange' : ''"
+                >{{ item.title }}</view
+              >
+            </view>
+          </scroll-view>
+        </view>
+      </uni-drawer>
+      <!-- 字体大小和颜色层 -->
+      <uni-popup ref="fontandcolor" type="bottom">
+        <view class="fcwrap">
+          <view class="fontwrap">
+            <slider
+              :value="fontSizeSlider"
+              activeColor="#f37b1d"
+              backgroundColor="#464646"
+              block-color="#f37b1d"
+              block-size="22"
+              min="1"
+              max="8"
+              @change="fontSizeChange"
+              @changing="fontSizeChange"
+            />
+          </view>
+          <view class="colorwrap">
+            <view class="coloritem" v-for="(s, index) in skinData" :key="index">
+              <button class="chcekbutton" :class="s.key" v-if="s.checked">
+                <fa-icon type="check" color="#f37b1d" size="22"></fa-icon>
+              </button>
+              <button
+                class="chcekbutton"
+                @tap="skinCheckbox(index, s.key)"
+                :class="s.key"
+                v-else
+              ></button>
+            </view>
+          </view>
+        </view>
+      </uni-popup>
+    </view>
+  </view>
 </template>
 
 <script>
-	import lzRedBook from "@/components/components/lz-red-book/lz-red-book.vue";
-	import uniPagination from "@/components/uni-pagination/uni-pagination.vue";
-	import uniIcons from "@/components/components/uni-icons/uni-icons.vue";
-	import uniSwiperDot from "@/components/components/uni-swiper-dot/uni-swiper-dot.vue";
-	import uniTag from "@/components/components/uni-tag/uni-tag.vue";
-	import axios from "axios";
-	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue";
+//抽屉 与 弹出层
+import uniDrawer from "@/components/uni-drawer/uni-drawer.vue";
+import uniPopup from "@/components/uni-popup/uni-popup.vue";
+export default {
+  components: {
+    uniDrawer,
+    uniPopup,
+  },
+  data() {
+    return {
+      corder: 0,
+      fictionid: "",
+      cachekey: "",
+      viewId: "",
+      clickid: undefined,
+      clist: [],
+      windowHeight: 0,
+      fontSize: 1,
+      fontSizeSlider: 2,
+      skinData: [
+        { key: "default", checked: true },
+        { key: "blue", checked: false },
+        { key: "green", checked: false },
+        { key: "light", checked: false },
+        { key: "night", checked: false },
+      ],
+      skinValue: "default",
+      layoutData: [],
+      loadnext: false,
+      ReadContent: "",
+      addBtn: false,
+    };
+  },
+  onLoad(e) {
+    //章节目录的高度动态获取
+    var me = this;
+    uni.getSystemInfo({
+      success(res) {
+        me.windowHeight = res.windowHeight - 126 + "px";
+      },
+    });
+    let chapter_url = "http://api.pingcc.cn/fictionChapter/search/";
+    let indexurl = "http://api.pingcc.cn/fictionContent/search/";
+    me.fictionid = e.fictionId;
+    me.indexurl = indexurl;
+    me.chapter_url = chapter_url;
+    //获取现在是第几个元素正在被显示
+    me.corder = e.corder;
+    me.viewId = "cid" + me.corder;
 
-	export default {
-		data() {
-			return {
-				mask: {
-					//遮罩层
-					showMask: false,
-					background: "#fff",
-					backgroundIndex: 0,
-				},
-				set: {
-					background: "#f0f0f0", //页面背景颜色
-					fontSize: 18, //字体大小
-					lineHeight: 33, //字体间距
-					fontColor: "#000", //字体颜色
-					scrollDirection: "leftRight", //滚动方向leftRight左右，上下topBottom
-				},
-				arr: [{
-						background: "#f0f0f0", //背景色
-						maskBg: "#fff", //遮罩层色
-						fontColor: "#524d51", //字体颜色
-						color: "#f5f5f5", //选择圆圈颜色
-					},
-					{
-						background: "#d8c9aa", //背景色
-						maskBg: "#f3e4c3", //遮罩层色
-						fontColor: "#3c2506", //字体颜色
-						color: "#e0d1aa", //选择圆圈颜色
-					},
-					{
-						background: "#daba94", //背景色
-						maskBg: "#f8dcb4", //遮罩层色
-						fontColor: "#3c2506", //字体颜色
-						color: "#d8b784", //选择圆圈颜色
-					},
-					{
-						background: "#cfb793", //背景色
-						maskBg: "#f8dcb4", //遮罩层色
-						fontColor: "#674923", //字体颜色
-						color: "#d6b781", //选择圆圈颜色
-					},
-					{
-						background: "#aac9aa", //背景色
-						maskBg: "#cdeccd", //遮罩层色
-						fontColor: "#2c1e1e", //字体颜色
-						color: "#abcaab", //选择圆圈颜色
-					},
-					{
-						background: "#333b3d", //背景色
-						maskBg: "#313439", //遮罩层色
-						fontColor: "#7e8894", //字体颜色
-						color: "#626a75", //选择圆圈颜色
-					},
-				],
-				//正文
-				content_text: '',
-				chapterMuneId: [],
-				chapterHeader: [],
-				chapterMuneIdIndex: []
-			};
-		},
-		onLoad(option) {
-			// #ifdef APP-PLUS
-			plus.navigator.setFullscreen(true); //隐藏状态栏
-			//#endif
-			var that = this;
-			uni.request({
-				url: "http://api.pingcc.cn/fictionContent/search/11194558", //仅为示例，并非真实接口地址。
-				success: (res) => {
-					this.content_text = res.data.data.data.content.join("");
-					// console.log(this.content_text)
-				},
-			});
-		},
-		mounted() {
-			this.init();
-		},
-		methods: {
-			chapterChoose(index) {
-				uni.request({
-					url: "http://api.pingcc.cn/fictionContent/search/" + this.chapterMuneId[index], //仅为示例，并非真实接口地址。
-					success: (res) => {
-						this.content_text = res.data.data.data.content.join("");
-						this.chapterMuneIdIndex = this.chapterMuneId[index]
-					},
-				});
-			},
-			init() {
-				uni.request({
-					url: "http://api.pingcc.cn/fictionChapter/search/11602", //仅为示例，并非真实接口地址。
-					success: (res) => {
-						let a = res.data.data.data;
-						let chapterLength = res.data.data.count;
-						for (let i = 0; i < chapterLength - 1; i++) {
-							this.chapterMuneId.push(a[i]["chapterId"]);
-							this.chapterHeader.push(a[i]["title"]);
-						}
-					},
-				});
+    var bookReadAddress;
+    this.$store.state.bookReadAddress.forEach((value, index) => {
+      if (value.fictionId == me.fictionid) {
+        bookReadAddress = value.bookReadAddress;
+      }
+    });
 
-			},
-			showDrawer(e) {
-				this.$refs[e].open();
-			},
-			// 抽屉状态发生变化触发
-			change(e, type) {
-				this[type] = e;
-			},
-			//点击中间
-			clickCenter() {
+    this.getChapterContent(bookReadAddress);
+    this.getBookChapter(indexurl);
 
-				let that = this;
-				that.mask.showMask = !that.mask.showMask;
-			},
-			//滚动到最后一页
-			scrollEnd() {
-				uni.showToast({
-					title: "最后一页了",
-				});
-			},
-			//滚动到第一页
-			scrollStart() {
-				uni.showToast({
-					title: "第一页",
-				});
-			},
-			//滑块设置字体间距或大小
-			sliderChange(e, type) {
-				let that = this;
-				that.$refs.lzRedBook.init();
-				if (type == "fontSize") {
-					// console.log('value 发生变化：' + e.detail.value)
-					that.set.fontSize = e.detail.value;
-				} else {
-					that.set.lineHeight = e.detail.value;
-				}
-				//重新计算页面页数
-				uni.$emit("lz-red-book-change");
-			},
-			//修改滚动方向
-			changeScrollDirection(text) {
-				let that = this;
-				that.set.scrollDirection = text;
-				//重新计算页面页数
-				uni.$emit("lz-red-book-change", "changeScrollDirection");
-			},
-			//修改背景颜色
-			changeBackground(index) {
-				let that = this;
-				that.mask.backgroundIndex = index;
-				that.set.background = that.arr[index].background; //背景颜色
-				that.set.fontColor = that.arr[index].fontColor; //字体颜色
-				that.mask.background = that.arr[index].maskBg; //遮罩背景色
-			},
-		},
-		components: {
-			lzRedBook,
-			uniIcons,
-			uniSwiperDot,
-			uniTag,
-			uniDrawer,
-		},
-	};
+    //uni.removeStorageSync("cachebookchapter");
+  },
+  //上拉加载下一章
+  onReachBottom() {
+    //为了有一个良好的体验，当页面加载至末尾的时候，手动拼接上下一章的内容。
+    // var me = this;
+    // let tempContent = me.ReadContent;
+    // if(this.loadnext) return;
+    // this.loadnext = true;
+    // //setTimeout(()=>{ this.loadnext = false; }, 3000);//3秒钟之内上拉只加载一次
+    // me.ReadContent += "<p style='text-align:center;'>---正在加载新的章节---</p>";
+
+    // 	let corder = me.corder;
+    // 	let cinfo = me.clist[corder];
+
+    // 	me.corder = cinfo.corder;
+    // 	me.viewId ="cid"+cinfo.corder; // 切换成下一个的ID
+    // 	console.log("被缓存的章节===="+me.corder);
+
+    // me.cachebookcp(me.corder);//缓存正在看的章节
+    // let ctitle =  cinfo.chapterTitle;
+
+    // uni.setNavigationBarTitle({
+    // 	title: ctitle
+    // });
+    console.log(111);
+    // let a
+    // me.clist.forEach((value,index)=>{
+    // 	// if(value.chapterId == this.$store.state)
+    // 	this.$store.state.bookReadAddress.forEach((value1,index1)=>{
+    // 		if(value.chapterId == value1.bookReadAddress){
+    // 			console.log(1)
+    // 		}
+    // 	})
+    // })
+    // // let url = me.indexurl + ;
+    // uni.request({
+    // 	url: url, //仅为示例，并非真实接口地址。
+    // 	success: (res) => {
+    // 		me.ReadContent = res.data.data.data.content.join("");
+    // 	},
+    // });
+    // this.loadnext = false; // 成功之后才能加载下一章。。要不然多次请求乱了
+    // 		let ctitlehtml = "<h5 style='text-align:center'>"+ctitle+"</h5>";
+    // 		me.ReadContent = tempContent+ ctitlehtml + res.content;
+    // let chapter_url = cinfo.chapterUrl;
+
+    // me.webhttp(url,{chapter_url}).then(res => {
+    // 	if (res.code == 200) {
+    // 		this.loadnext = false; // 成功之后才能加载下一章。。要不然多次请求乱了
+    // 		let ctitlehtml = "<h5 style='text-align:center'>"+ctitle+"</h5>";
+    // 		me.ReadContent = tempContent+ ctitlehtml + res.content;
+    // 	}
+    // });
+  },
+  methods: {
+    //缓存当前读书的章节  点目录的不管只缓存下滑的
+    cachebookcp(corder) {
+      var me = this;
+      var cachemap = uni.getStorageSync("cachebookchapter");
+      if (cachemap == "" || cachemap == null || cachemap == undefined) {
+        cachemap = [];
+        let cachebook = { key: me.fictionid, value: corder };
+        cachemap.push(cachebook);
+      }
+      if (cachemap.length > 0) {
+        let exist = false;
+        for (let i = 0; i < cachemap.length; i++) {
+          //console.log(cachemap[i].key == me.indexurl);
+          if (cachemap[i].key == me.fictionid) {
+            cachemap[i].value = corder;
+            exist = true;
+            break;
+          }
+        }
+        if (!exist) {
+          let cachebook = { key: me.fictionid, value: corder };
+          cachemap.push(cachebook);
+        }
+      }
+      console.log(cachemap);
+      uni.setStorageSync("cachebookchapter", cachemap);
+      //console.log(uni.getStorageSync("cachebookchapter"));
+    },
+    getChapterContent(chapter_url) {
+      var me = this;
+      var url = me.indexurl + chapter_url;
+      uni.request({
+        url: url, //仅为示例，并非真实接口地址。
+        success: (res) => {
+          me.ReadContent = res.data.data.data.content.join("");
+        },
+      });
+    },
+
+    getBookChapter(indexurl) {
+      var me = this;
+      var url = me.chapter_url + me.fictionid;
+      uni.request({
+        url: url, //仅为示例，并非真实接口地址。
+        success: (res) => {
+          let chapter = res.data.data.data;
+          let a = new Array();
+          me.clist = chapter;
+        },
+      });
+    },
+    //点击目录显示书籍详情
+    details(item) {
+      var me = this;
+      //me.changeurl();
+
+      //同个列表多次点击只算一次点击
+      if (!me.clickid) {
+        me.clickid = item.id;
+      } else if (me.clickid == item.id) {
+        return;
+      }
+      me.clickid = item.id;
+      me.corder = item.corder;
+
+      let ctitle = item.chapterTitle;
+      uni.setNavigationBarTitle({
+        title: ctitle,
+      });
+
+      me.ReadContent = ""; //清空重新加载
+      //如果已经有滚动，需要清空滚动
+      uni.pageScrollTo({
+        scrollTop: 0,
+      });
+      this.$store.commit("bookReadAddress1", [me.fictionid, item]);
+      me.getChapterContent(item);
+      //this.getNewReadContent();
+    },
+    //动态改变url
+    changeurl() {
+      var me = this;
+      var url = window.location.href;
+      var valiable = url.split("?")[0];
+
+      var param =
+        "?chapter_id=" + me.cinfo.id + "&fictionid=" + me.cinfo.fictionId;
+      window.history.pushState({}, 0, valiable + param);
+    },
+    getNewReadContent() {
+      var me = this;
+      let corder = me.cinfo.corder;
+      ///取数组的下一个元素赋值给当前的cinfo
+      me.cinfo = me.clist[corder];
+
+      uni.setNavigationBarTitle({
+        title: me.cinfo.chapterTitle,
+      });
+      me.viewId = "cid" + corder;
+      me.getChapterContent(me.cinfo.chapterUrl);
+    },
+
+    //打开目录
+    openclist() {
+      this.$refs.opbottom.close();
+      this.$refs.clistdrawer.open();
+    },
+    //打开设置
+    opensetting() {
+      this.$refs.opbottom.close();
+      this.$refs.fontandcolor.open();
+    },
+    //打开底部的操作菜单
+    showopview() {
+      this.$refs.opbottom.open();
+    },
+
+    fontSizeMove() {
+      let Size = this.fontSizeSlider;
+      if (Size > 1) {
+        let num = Size - 1;
+        this.fontSizeSlider = num;
+        this.SetFontSize(num);
+      }
+    },
+    fontSizeAdd() {
+      let Size = this.fontSizeSlider;
+      if (Size < 8) {
+        let num = Size + 1;
+        this.fontSizeSlider = num;
+        this.SetFontSize(num);
+      }
+    },
+    fontSizeChange(e) {
+      let num = e.detail.value;
+      this.SetFontSize(num);
+    },
+    SetFontSize(num) {
+      if (num == 1) {
+        this.fontSize = 0.875;
+      } else if (num == 2) {
+        this.fontSize = 1;
+      } else if (num == 3) {
+        this.fontSize = 1.125;
+      } else if (num == 4) {
+        this.fontSize = 1.25;
+      } else if (num == 5) {
+        this.fontSize = 1.375;
+      } else if (num == 6) {
+        this.fontSize = 1.5;
+      } else if (num == 7) {
+        this.fontSize = 1.625;
+      } else if (num == 8) {
+        this.fontSize = 1.75;
+      }
+    },
+    skinCheckbox(index, key) {
+      let items = this.skinData;
+      for (let i = 0, lenI = items.length; i < lenI; ++i) {
+        this.skinData[i].checked = false;
+      }
+      this.skinData[index].checked = true;
+      this.skinValue = key;
+    },
+    layoutCheckbox(index, key) {
+      let items = this.layoutData;
+      for (let i = 0, lenI = items.length; i < lenI; ++i) {
+        this.layoutData[i].checked = false;
+      }
+      this.layoutData[index].checked = true;
+      this.layoutValue = key;
+    },
+  },
+};
 </script>
 
-<style scoped lang="scss">
-	.menuBar {
-		overflow-y: scroll;
-		height: 100vh;
-	}
-
-	.redBook {
-		width: 100%;
-		height: 100%;
-
-		.mask-top {
-			position: fixed;
-			height: 40upx;
-			transition: all 0.2s;
-			width: 100%;
-			z-index: 1000;
-			margin: auto;
-			border-radius: 0 0 4px 4px;
-		}
-
-		.mask-bottom {
-			position: fixed;
-			height: 350upx;
-			transition: all 0.2s;
-			width: 100%;
-			z-index: 1000;
-			margin: auto;
-			border-radius: 10px 10px 0 0;
-			padding: 10px;
-			box-sizing: border-box;
-
-			.v1 {
-				width: 100%;
-				display: flex;
-				align-items: center;
-
-				.slider-warp {
-					display: flex;
-					flex: 1;
-					align-items: center;
-
-					.slider {
-						flex: 1;
-					}
-				}
-			}
-
-			.v2 {
-				display: flex;
-				width: 100%;
-				justify-content: space-around;
-				margin-top: 10px;
-
-				.color-warp {
-					border: 1px solid #6d583b;
-					border-radius: 50%;
-					width: 26px;
-					height: 26px;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-				}
-			}
-
-			.v3 {
-				margin-top: 10px;
-
-				.v3-item {
-					width: 100px;
-					height: 30px;
-					background: #f7f7f7;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-				}
-			}
-		}
-	}
+<style>
+@import url("readbook.css");
 </style>

@@ -75,7 +75,6 @@
 		},
 		methods: {
 			searchBook() {
-				console.log(2)
 				this.$emit('search',this.searchVal)
 			},
 			searchClick() {

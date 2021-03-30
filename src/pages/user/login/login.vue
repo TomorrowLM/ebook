@@ -1,11 +1,12 @@
 <template>
   <view v-cloak>
-    <cmd-nav-bar
+    <cmd-nav-bar back title="用户登录" @rightText="fnRegisterWin"></cmd-nav-bar>
+    <!--     <cmd-nav-bar
       back
       title="用户登录"
       rightText="注册"
-      @rightText="fnRegisterWin"
-    ></cmd-nav-bar>
+      
+    ></cmd-nav-bar> -->
     <cmd-page-body type="top">
       <view class="login">
         <!-- 上部分 start -->
@@ -177,13 +178,15 @@ export default {
       safety: {
         time: 60,
         state: false,
-        interval: "",
+        interval: "", 
       },
       status: true, // true手机登录,false账号登录
-      username:localStorage.getItem("username")
+      username:'',
     };
   },
-
+	created(){
+		this.username = this.$store.state.username
+	},
   watch: {
     /**
      * 监听手机登录数值
@@ -216,11 +219,10 @@ export default {
       },
       deep: true,
     },
-username:{
-  fn(){
-    console.log(1)
-  }
-}
+    username: {
+      fn() {
+      },
+    },
   },
 
   methods: {
@@ -238,20 +240,19 @@ username:{
           },
         })
         .then(
-          function(data) {
+          function (data) {
             if (data.data != "fail") {
-              console.log(data);
               localStorage.setItem("username", data.data);
-          //  localStorage.setItem("username", 'liming');
-                uni.switchTab({
+			  this.$store.state.username = this.data.data
+              //  localStorage.setItem("username", 'liming');
+              uni.switchTab({
                 url: "/pages/mine/index",
               });
-              
             } else {
               that.$refs.popup.open();
             }
           },
-          function(response) {}
+          function (response) {}
         );
     },
     close(done) {

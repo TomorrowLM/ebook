@@ -8,6 +8,7 @@
       fixed="true"
       color="$uni-color-success"
       @clickLeft="showDrawer('showLeft')"
+      style="margin-bottom:10px;border:2px solid #1f1f4d66"
     >
     </uni-nav-bar>
     <uni-drawer
@@ -23,51 +24,94 @@
           ></cmd-avatar>
         </cmd-cel-item>
       </view>
-      <button @click="goToMine" class="goToMine">本地文件扫描</button>
+      <button @click="goToSelectFile" class="goToMine">本地文件</button>
     </uni-drawer>
-    <uni-search-bar clearButton="always"></uni-search-bar>
+	<view class="content">
+	<view class="book-list" v-for="(book, index) in this.$store.state.localbookshelf" :key="index">
+			  <view class="book"  @longtap="longtap" @click="readlocal(book.path)">
+			    <image src="../../static/book-tree.jpg" style="max-height: 100%;">
+			    <text class="text-center">{{ book[0] }}</text> 
+			  </view> 
+	</view>
+	</view>
     <view class="content">
-      <view class="book-list" v-for="(book, index) in bookList" :key="index">
-        <view class="book" @click="read(book.name)">
-          <image src="../../static/book-tree.jpg">
-          <text class="text-center">{{ book.title }}</text>
+      <view class="book-list" v-for="(book, index) in this.$store.state.bookshelf" :key="index">
+        <view class="book" :id="book.fictionId" @longtap="longtap" @click="read(book.fictionId)">
+          <image :src="book.cover">
+          <text class="text-center">{{ book.title }}</text> 
         </view>
       </view>
     </view>
+	<tan-chu :deleteEle="deleteEle"></tan-chu>
   </div>
 </template>
-
+ 
 <script>
 import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue";
 import uniSearchBar from "@/components/uni-search-bar/uni-search-bar.vue";
 import uniDrawer from "@/components/uni-drawer/uni-drawer.vue";
 import cmdAvatar from "@/components/cmd-person_1.1/components/cmd-avatar/cmd-avatar.vue";
 import cmdCelItem from "@/components/cmd-person_1.1/components/cmd-cell-item/cmd-cell-item.vue";
-import Person from '../../global'
+import tanChu from "@/components/a-tanchu/tanchu.vue";
 export default {
+  components: {
+    uniNavBar,
+    uniSearchBar,
+    uniDrawer,
+    cmdAvatar,
+    cmdCelItem,
+    tanChu,
+  },
   data() {
     return {
-	  StatusBarHeight:0,
+      StatusBarHeight: 0,
       title: "Hello",
-      bookList:Person.state,
-	    resInfo:''
+      bookList: this.$store.state.bookshelf,
+      resInfo: "",
+      deleteEle: {},
     };
   },
-  watch:{
-    bookList:function(newValue,old){
-      // console.log(2)
-      // this.bookList = JSON.parse(localStorage.getItem('bookshelf'))   
-    }
+  watch: {
+    bookList: function (newValue, old) {},
   },
   onLoad() {
-  	const that = this;
-  		uni.getSystemInfo({
-  			success(res) {
-  				that.StatusBarHeight = res.statusBarHeight;
-  			}
-  		})
+    const that = this;
+    uni.getSystemInfo({
+      success(res) {
+        that.StatusBarHeight = res.statusBarHeight;
+      },
+    });
   },
   methods: {
+    longtap(e) {
+      this.$store.state.isDeleteInbook = true;
+      this.deleteEle = e;
+    },
+    //   handletouchstart(e) {
+    //     this.timeOutEvent = setTimeout(() => {
+    //       this.onLongPress(e);
+    //     }, 1000); //这里设置定时器，定义长按1000毫秒触发长按事件，时间可以自己改，
+    //     return false;
+    //   },
+    //   handletouchend(fictionId) {
+    //     clearTimeout(this.time); //清除定时器
+    //     if (this.time != 0) {
+    //       //处理点击时间
+    // uni.navigateTo({
+    //   url: "/pages/read/index?fictionId=" + fictionId,
+    // });
+    //     }
+    //     return false;
+    //   },
+    //   handletouchmove() {
+    //     clearTimeout(this.time); //清除定时器
+    //     this.time = 0;
+    //   },
+    //   onLongPress(e) {
+    //     // 处理长按事件
+    //     this.$store.state.isDeleteInbook = true;
+    //     this.deleteEle = e;
+    //   },
     showDrawer(e) {
       this.$refs[e].open();
     },
@@ -83,73 +127,48 @@ export default {
       // );
       this[type] = e;
     },
-    goToMine() {
-		//uni-app 中，没有 document。可以使用 plus.globalEvent.addEventListener 来实现
-		// plus.globalEvent.addEventListener( "plusready", onPlusReady, false );
-		// 扩展API加载完毕，现在可以正常调用扩展API
-		// 监听设备网络状态变化事件
-		// plus.globalEvent.addEventListener('netchange', function(){});
-function onPlusReady() {
-	const self = this;
-	var url="file:///storage/emulated/0/22.doc"; 
-	//将本地URL路径转换成平台绝对路径
-	var path=plus.io.convertLocalFileSystemURL(url);
-	//将平台绝对路径转换成本地URL路径
-	// path=plus.io.convertAbsoluteFileSystem(url);
-	console.log(path);    
-	//请求本地文件系统对象
-	plus.io.requestFileSystem(plus.io.PRIVATE_WWW, function( fs ) {
-		console.log(fs.root.fullPath) 
-	     fs.root.getFile('../../../../../../Documents/2222.txt',{create:true}, function(fileEntry){
-				fileEntry.file( function(file){
-					var fileReader = new plus.io.FileReader();
-					console.log("getFile:" + JSON.stringify(file));
-					fileReader.readAsText(file, 'utf-8');
-					fileReader.onloadend = function(evt) {
-						console.log("11" + evt);
-						console.log("evt.target" + evt.target);
-						console.log(evt.target.result);
-					}
-					console.log(file.size + '--' + file.name);
-				} );
-			});
-		
-		}, function ( e ) {
-			console.log( "Request file system failed: " + e.message );
-		} );
-
-	//通过URL参数获取目录对象或文件对象
-plus.io.resolveLocalFileSystemURL(path, function(entry) {
-	//entry=DirectoryEntry 文件系统中的目录对象，用于管理特定的本地目录
-					// console.log(entry.toLocalURL())
-					
-					///读取文件  
-					
-					entry.file(function(file) {
-						// console.log(file)
-						//文件系统中的读取文件对象，用于获取文件的内容
-						var fileReader = new plus.io.FileReader();
-						fileReader.readAsText(file, 'GB2312');
-						fileReader.onload = function(e) {
-						// console.log(e.target.result);
-						}
-						//以文本格式读取文件数据内容
-						
-					});
-				})
-}
-onPlusReady()
+    goToMine() {},
+    async goToSelectFile() {
+      var that = this;
+      var REQUESTCODE = 1;
+      var main = plus.android.runtimeMainActivity();
+      var Intent = plus.android.importClass("android.content.Intent");
+      var intent = new Intent(Intent.ACTION_GET_CONTENT);
+      intent.setType("*/*"); //设置类型，任意类型
+      //intent.setType("image/*");
+      //intent.setType("audio/*"); //选择音频
+      //intent.setType("video/*"); //选择视频 （mp4 3gp 是android支持的视频格式）
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      main.startActivityForResult(intent, REQUESTCODE);
+      main.onActivityResult = await function (requestCode, resultCode, data) {
+        if (REQUESTCODE == requestCode) {
+          var context = main;
+          plus.android.importClass(data);
+          // 获得文件路径
+          var fileData = data.getData();
+          var path = plus.android.invoke(fileData, "getPath");
+          console.log("path:" + path);
+          var bookname = path.split("/");
+          bookname = bookname[bookname.length - 1];
+          console.log(bookname);
+          that.$store.commit("bookSelectNameActive", [bookname, path]);
+          // 判断文件类型
+          var resolver = context.getContentResolver();
+          var fileType = plus.android.invoke(resolver, "getType", fileData);
+          // console.log("fileType:" + fileType);
+          that.$store.state.isShowInbook = true;
+        }
+      };
     },
-    read(name) {
+    read(fictionId) {
       uni.navigateTo({
-        url: "/pages/read/index?name=" + name,
+        url: "/pages/read/index?fictionId=" + fictionId,
       });
     },
   },
-  components: { uniNavBar, uniSearchBar, uniDrawer, cmdAvatar, cmdCelItem },
 };
 </script>
 
 <style scoped>
-	@import url("book.css");
+@import url("book.css");
 </style>

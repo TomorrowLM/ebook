@@ -1,16 +1,17 @@
 <template>
 	<view class="cmd-avatar" :class="setShapeSizeClass" :style="setIconTextStyle+setNumSizeStyle" @tap="$_click">
-		<image v-if="src" class="cmd-avatar-img" mode="aspectFit" :src="src" @load="$_imageLoad" @error="$_imageError"></image>
+		<!-- <image v-if="src" class="cmd-avatar-img" mode="aspectFit" ref="image" @load="$_imageLoad" @error="$_imageError" :src="src"></image> -->
+		<img v-if="src" class="cmd-avatar-img"  ref="image" v-bind:src="src" />
 		<cmd-icon v-if="icon && !src && !text" :type="icon" :size="setIconSize" :color="make.color"></cmd-icon>
 		<text v-if="text && !src && !icon" v-text="text"></text>
 	</view>
-</template>
+</template> 
 
 <script>
 	import cmdIcon from '../cmd-icon/cmd-icon.vue'
 
 	/**  
-	 * 头像组件  
+	 * 头像组件   
 	 * @description 用于展示用户头像、数字号、单字符。  
 	 * @tutorial https://ext.dcloud.net.cn/plugin?id=176  
 	 * @property {String,Number} text 头像显示文字 - 建议取首位text[0]，长度小于3位  
@@ -30,7 +31,6 @@
 		components: {
 			cmdIcon
 		},
-
 		props: {
 			/**
 			 * 大小 sm md lg Number
@@ -62,10 +62,10 @@
 			/**
 			 * 图片网络地址
 			 */
-			src: {
-				type: String,
-				default: ''
-			},
+			// src: {
+			// 	type: String,
+			// 	default: ''
+			// },
 			/**
 			 * 图标type名称
 			 */
@@ -81,7 +81,13 @@
 				default: ''
 			}
 		},
-
+		updated() {
+			// this.$refs.image.style.height = '20px'
+			// console.log(this.$refs.image)  
+			// document.getElementsByClassName('cmd-avatar-img')[0].style.height='20px'
+			// console.log(this.src)
+			// this.$refs.image.style.src = this.$store.state.image
+		},
 		computed: {
 			// 形状大小
 			setShapeSizeClass() {
@@ -122,6 +128,11 @@
 					return uni.upx2px(128) / 2;
 				}
 				return uni.upx2px(96) / 2;
+			},
+			src:{
+				get:function(){
+					return this.$store.state.image
+				}
 			}
 		},
 

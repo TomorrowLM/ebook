@@ -78,8 +78,9 @@
                 :before-close="true"
                 @close="close"
                 @confirm="confirm"
-                title="用户名存在或者密码不正确"
-              >12</uni-popup-dialog>
+                title="用户名存在"
+                >12</uni-popup-dialog
+              >
             </uni-popup>
           </view>
         </cmd-transition>
@@ -165,7 +166,6 @@ export default {
         interval: "",
       },
       status: true, // true手机注册,false账号注册
-
     };
   },
 
@@ -206,8 +206,8 @@ export default {
     /**
      * 注册按钮点击执行
      */
-    fnRegister() {  
-      let that = this
+    fnRegister() {
+      let that = this;
       axois
         .post("http://127.0.0.1:8000/register", {
           params: {
@@ -216,23 +216,21 @@ export default {
           },
         })
         .then(
-          function(data) {
+          function (data) {
             if (data.data != "fail") {
-              console.log(data);
               localStorage.setItem("username", data.data);
+			  this.$store.state.username = this.data.data
               uni.switchTab({
                 url: "/pages/mine/index",
               });
-            } else {          
-               that.$refs.popup.open()
+            } else {
+              that.$refs.popup.open();
             }
           },
-          function(response) {
-            
-          }
+          function (response) {}
         );
     },
- 
+
     close(done) {
       // TODO 做一些其他的事情，before-close 为true的情况下，手动执行 done 才会关闭对话框
       // ...

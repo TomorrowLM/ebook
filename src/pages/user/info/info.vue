@@ -4,18 +4,15 @@
     <cmd-page-body type="top">
       <cmd-transition name="fade-up">
         <view>
-          <cmd-cel-item title="头像" slot-right arrow>
+          <cmd-cel-item title="头像" slot-right arrow @click="chooseImage">
             <cmd-avatar
-              src="https://avatar.bbs.miui.com/images/noavatar_small.gif"
+              :src="image"
+			  ref="image1"
             ></cmd-avatar>
-          </cmd-cel-item>
-          <cmd-cel-item title="积分" addon="0" arrow></cmd-cel-item>
+          </cmd-cel-item> 
           <cmd-cel-item title="昵称" :addon="username" arrow></cmd-cel-item>
           <cmd-cel-item title="姓名" addon="用户姓名" arrow></cmd-cel-item>
-          <!-- <cmd-cel-item title="联系方式" addon="15676109501" arrow></cmd-cel-item>
-          <cmd-cel-item title="证件号码" addon="450112xxxxxxxx2017" arrow></cmd-cel-item>
-          <cmd-cel-item title="我的地址" addon="广西壮族自治区南宁市西乡塘区大学西路29号" arrow></cmd-cel-item>
-          <cmd-cel-item title="修改密码" @click="fnClick('modify')" arrow></cmd-cel-item> -->
+          <cmd-cel-item title="位置" :addon="address" arrow @click="addressActive"></cmd-cel-item>
           <button class="btn-logout" @click="exit">退出登录</button>
         </view>
       </cmd-transition>
@@ -38,16 +35,59 @@ export default {
     cmdCelItem,
     cmdAvatar,
   },
-
   data() {
     return {
-      username: localStorage.getItem("username"),
+      username: this.$store.state.username,
     };
   },
+  created() {
 
-  mounted() {},
-
-  methods: {
+  },
+  computed:{
+	 image:{
+		 get(){
+			 return this.$store.state.image
+		 }
+	 },
+	 address:{
+		 get(){
+			 return this.$store.state.address
+		 }
+	 }
+  },
+  updated() {
+  	console.log(this.$refs.image1.$refs.image)
+	console.log(this.$store.state.image) 
+	// this.$refs.image1.$refs.image.style.src= this.$store.state.image
+  },
+  methods: {  
+	  addressActive(){
+		  uni.chooseLocation({
+		      success: (res)=> {
+		          // console.log('位置名称：' + res.name);
+		          // console.log('详细地址：' + res.address);
+		          // console.log('纬度：' + res.latitude);
+		          // console.log('经度：' + res.longitude); 
+				  this.$store.commit('addressActive',res.address)
+		      }
+		  });
+	  },
+	  chooseImage(){
+		  // console.log(this)  
+		  uni.chooseImage({
+		      count: 1, //默认9
+		      sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+		      sourceType: ['album'], //从相册选择
+		      success: (res)=> {
+				  this.$store.commit("chooseImage",JSON.stringify(res.tempFilePaths[0]));	
+				  // this.$refs.image.$el.style.height = '20px'
+				  // console.log(this.$refs.image)
+				  // console.log(this.$refs.image1.$refs.image)
+				  // console.log(this.$store.state.image) 
+				  // this.$refs.image1.$refs.image.style.src= this.$store.state.image 
+		      }  
+		  });
+	  },
     /**
      * 点击触发
      * @param {Object} type 跳转页面名或者类型方式
@@ -60,7 +100,8 @@ export default {
       }
     },
     exit() {
-      localStorage.removeItem("username");
+      // localStorage.removeItem("username");
+	  this.$store.state.username = ''
       uni.switchTab({
         url: "/pages/mine/index",
       });
