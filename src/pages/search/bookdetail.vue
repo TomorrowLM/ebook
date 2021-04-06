@@ -165,6 +165,7 @@ export default {
     addToMybooks() {
 	  this.$store.commit('bookshelfActive',this.book_info)
     },
+
 	read(fictionId) {
 	  uni.navigateTo({
 	    url: "/pages/read/index?fictionId=" + this.book_info.fictionId,
@@ -173,7 +174,10 @@ export default {
 	collect(){
 		console.log(this.book_info)
 		this.$store.commit('collect',this.book_info)
-	}
+  },
+  addToMybooks(){
+  	this.$store.commit('bookdetailaddbook',this.book_info)
+  },
   },
   components: { uniSearchBar, vTab },
 };

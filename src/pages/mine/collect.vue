@@ -45,12 +45,13 @@ export default {
       bookList: this.$store.state.collectBook,
       resInfo: "",
       deleteEle: {},
+	  book_info:{},
     };
   },
   watch: {
     bookList: function (newValue, old) {},
   },
-  onLoad() {
+  onLoad(e) {
     const that = this;
     uni.getSystemInfo({
       success(res) {

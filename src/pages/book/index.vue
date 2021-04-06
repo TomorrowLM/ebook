@@ -82,6 +82,20 @@ export default {
       },
     });
   },
+  watch:{
+    bookList:function(newValue,old){
+ 
+    }
+  },
+  onLoad() {
+    console.log(this.$store.state.bookshelf)
+  	const that = this;
+  		uni.getSystemInfo({
+  			success(res) {
+  				that.StatusBarHeight = res.statusBarHeight;
+  			}
+  		}) 
+  },
   methods: {
     longtap(e) {
       this.$store.state.isDeleteInbook = true;

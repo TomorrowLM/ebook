@@ -29,6 +29,11 @@ const store = new Vuex.Store({
 	collectBook:new Array(),
   },
   mutations: {
+	  bookdetailaddbook(state, obj){
+		  console.log(typeof state.bookshelf)
+		 state.bookshelf = state.bookshelf.split('')
+		  state.bookshelf.push(obj)
+	  },
 	bookshelfActive(state, obj){
 		// JSON.parse(state.bookshelf)
 		state.bookshelf.push(obj);
