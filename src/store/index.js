@@ -29,10 +29,10 @@ const store = new Vuex.Store({
 	collectBook:new Array(),
   },
   mutations: {
-	  bookdetailaddbook(state, obj){
-		  console.log(typeof state.bookshelf)
-		 state.bookshelf = state.bookshelf.split('')
-		  state.bookshelf.push(obj)
+	bookdetailaddbook(state, obj){
+		 //  console.log(typeof state.bookshelf)
+		 // state.bookshelf = state.bookshelf.split('')
+		  // state.bookshelf.push(obj)
 	  },
 	bookshelfActive(state, obj){
 		// JSON.parse(state.bookshelf)
@@ -55,7 +55,9 @@ const store = new Vuex.Store({
 	},
 	bookshelfClear(state, obj){
 		state.bookshelf = obj
+		state.localbookshelf = obj
 		uni.setStorageSync('bookshelf', obj);
+		uni.setStorageSync('localbookshelf', obj);
 	}, 
 	bookReadAddress1(state , n){
 		state.bookReadAddress.forEach((value,index)=>{
@@ -75,7 +77,6 @@ const store = new Vuex.Store({
 	bookSelectNameActive(state , n){
 		state.bookSelectName = n[0] 
 		state.localbookshelf.push(n)
-		console.log(state.localbookshelf[0])
 		uni.setStorage({
 		    key: 'localbookshelf',
 		    data: state.localbookshelf,

@@ -27,8 +27,8 @@
       <button @click="goToSelectFile" class="goToMine">本地文件</button>
     </uni-drawer>
 	<view class="content">
-	<view class="book-list" v-for="(book, index) in this.$store.state.localbookshelf" :key="index">
-			  <view class="book"  @longtap="longtap" @click="readlocal(book.path)">
+	<view class="book-list"  v-for="(book, index) in this.$store.state.localbookshelf" :key="index">
+			  <view class="book"  :id="book[1]" @longtap="longtap" @click="readlocal(book[1])">
 			    <image src="../../static/book-tree.jpg" style="max-height: 100%;">
 			    <text class="text-center">{{ book[0] }}</text> 
 			  </view> 
@@ -174,6 +174,11 @@ export default {
         }
       };
     },
+	readlocal(path){
+		uni.navigateTo({
+		  url: "/pages/read/local?path=" + path,
+		});
+	},
     read(fictionId) {
       uni.navigateTo({
         url: "/pages/read/index?fictionId=" + fictionId,

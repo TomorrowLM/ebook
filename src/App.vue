@@ -18,8 +18,8 @@
 				let c = this.$store.state.localbookshelf; 
 				c = uni.getStorageSync('localbookshelf')
 				this.$store.state.localbookshelf = c;
-				 uni.removeStorageSync('localbookshelf');
-				console.log(this.$store.state.localbookshelf)
+				//  uni.removeStorageSync('localbookshelf');
+				// console.log(this.$store.state.localbookshelf) 
 		},
 		onShow: function() {
 

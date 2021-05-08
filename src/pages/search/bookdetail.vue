@@ -176,6 +176,7 @@ export default {
 		this.$store.commit('collect',this.book_info)
   },
   addToMybooks(){
+	  console.log(1)
   	this.$store.commit('bookdetailaddbook',this.book_info)
   },
   },

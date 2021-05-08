@@ -2,12 +2,19 @@
   <view class="page-head">
     <view class="page">
       <view class="fictionwrap" v-if="ReadContent">
-        <view
-          class="fcontent"
-          :style="{ fontSize: `${fontSize}rem` }"
-          :class="skinValue"
-          v-html="ReadContent"
-        ></view>
+        <scroll-view
+          scroll-y="true"
+          class="fictionwrap"
+          lower-threshold="50"
+          @scrolltolower="lower"
+        >
+          <view
+            class="fcontent"
+            :style="{ fontSize: `${fontSize}rem` }"
+            :class="skinValue"
+            v-html="ReadContent"
+          ></view>
+        </scroll-view>
       </view>
       <uni-loading status="loading" v-else></uni-loading>
       <!-- 屏幕居中点击层 -->
@@ -120,6 +127,8 @@ export default {
       loadnext: false,
       ReadContent: "",
       addBtn: false,
+      bookReadAddress: "",
+      title: "",
     };
   },
   onLoad(e) {
@@ -142,69 +151,56 @@ export default {
     var bookReadAddress;
     this.$store.state.bookReadAddress.forEach((value, index) => {
       if (value.fictionId == me.fictionid) {
-        bookReadAddress = value.bookReadAddress;
+        this.bookReadAddress = value.bookReadAddress;
       }
     });
 
-    this.getChapterContent(bookReadAddress);
+    this.getChapterContent(this.bookReadAddress);
     this.getBookChapter(indexurl);
 
     //uni.removeStorageSync("cachebookchapter");
   },
-  //上拉加载下一章
-  onReachBottom() {
-    //为了有一个良好的体验，当页面加载至末尾的时候，手动拼接上下一章的内容。
-    // var me = this;
-    // let tempContent = me.ReadContent;
-    // if(this.loadnext) return;
-    // this.loadnext = true;
-    // //setTimeout(()=>{ this.loadnext = false; }, 3000);//3秒钟之内上拉只加载一次
-    // me.ReadContent += "<p style='text-align:center;'>---正在加载新的章节---</p>";
 
-    // 	let corder = me.corder;
-    // 	let cinfo = me.clist[corder];
-
-    // 	me.corder = cinfo.corder;
-    // 	me.viewId ="cid"+cinfo.corder; // 切换成下一个的ID
-    // 	console.log("被缓存的章节===="+me.corder);
-
-    // me.cachebookcp(me.corder);//缓存正在看的章节
-    // let ctitle =  cinfo.chapterTitle;
-
-    // uni.setNavigationBarTitle({
-    // 	title: ctitle
-    // });
-    console.log(111);
-    // let a
-    // me.clist.forEach((value,index)=>{
-    // 	// if(value.chapterId == this.$store.state)
-    // 	this.$store.state.bookReadAddress.forEach((value1,index1)=>{
-    // 		if(value.chapterId == value1.bookReadAddress){
-    // 			console.log(1)
-    // 		}
-    // 	})
-    // })
-    // // let url = me.indexurl + ;
-    // uni.request({
-    // 	url: url, //仅为示例，并非真实接口地址。
-    // 	success: (res) => {
-    // 		me.ReadContent = res.data.data.data.content.join("");
-    // 	},
-    // });
-    // this.loadnext = false; // 成功之后才能加载下一章。。要不然多次请求乱了
-    // 		let ctitlehtml = "<h5 style='text-align:center'>"+ctitle+"</h5>";
-    // 		me.ReadContent = tempContent+ ctitlehtml + res.content;
-    // let chapter_url = cinfo.chapterUrl;
-
-    // me.webhttp(url,{chapter_url}).then(res => {
-    // 	if (res.code == 200) {
-    // 		this.loadnext = false; // 成功之后才能加载下一章。。要不然多次请求乱了
-    // 		let ctitlehtml = "<h5 style='text-align:center'>"+ctitle+"</h5>";
-    // 		me.ReadContent = tempContent+ ctitlehtml + res.content;
-    // 	}
-    // });
-  },
   methods: {
+    lower: function (e) {
+      var me = this;
+      new Promise((resolve) => {
+        var url1 = me.chapter_url + me.fictionid;
+        uni.request({
+          url: url1, //仅为示例，并非真实接口地址。
+          success: (res) => {
+            let chapter = res.data.data.data;
+            let a = new Array();
+            me.clist = chapter;
+            console.log(this.bookReadAddress);
+            me.clist.forEach((value, index) => {
+              if (this.bookReadAddress == value.chapterId) {
+                this.title = me.clist[index + 1].title;
+                resolve();
+              }
+            });
+          },
+        });
+      }).then((title) => {
+        me.bookReadAddress = String(Number(me.bookReadAddress) + 1);
+        var url = me.indexurl + me.bookReadAddress;
+        // console.log(url)
+        uni.request({
+          url: url, //仅为示例，并非真实接口地址。
+          success: (res) => {
+            console.log(this.title);
+            let ctitlehtml =
+              "<h5 style='text-align:center'>" + this.title + "</h5>";
+            me.ReadContent =
+              me.ReadContent + ctitlehtml + res.data.data.data.content.join("");
+            this.$store.commit("bookReadAddress1", [
+              this.fictionid,
+              this.bookReadAddress,
+            ]);
+          },
+        });
+      });
+    },
     //缓存当前读书的章节  点目录的不管只缓存下滑的
     cachebookcp(corder) {
       var me = this;
