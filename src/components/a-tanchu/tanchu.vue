@@ -303,14 +303,16 @@ export default {
       this.$store.state.isDeleteInbook = false;
     },
     add2() {
-		console.log(1)
+	
       this.$store.state.bookshelf.forEach((value, index) => {
+		  console.log(111)
         if (value.fictionId === this.deleteEle.currentTarget.id) {
           this.$store.state.bookshelf.splice(index, 1);
         }
       });
 	  this.$store.state.localbookshelf.forEach((value, index) => {
-	    if (value[1] === this.deleteEle.currentTarget.id) {
+	    console.log(this.$store.state.localbookshelf)
+		if (value[1] === this.deleteEle.currentTarget.id) {
 	      this.$store.state.localbookshelf.splice(index, 1);
 	    }
 	  });

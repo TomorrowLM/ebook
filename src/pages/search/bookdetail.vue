@@ -162,9 +162,7 @@ export default {
       "white";
   },
   methods: { 
-    addToMybooks() {
-	  this.$store.commit('bookshelfActive',this.book_info)
-    },
+
 
 	read(fictionId) {
 	  uni.navigateTo({
@@ -176,8 +174,8 @@ export default {
 		this.$store.commit('collect',this.book_info)
   },
   addToMybooks(){
-	  console.log(1)
-  	this.$store.commit('bookdetailaddbook',this.book_info)
+  	this.$store.commit('bookshelfActive',this.book_info)
+	console.log(this.$store.state.localbookshelf)
   },
   },
   components: { uniSearchBar, vTab },

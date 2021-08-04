@@ -15,9 +15,9 @@
 				 let b = this.$store.state.bookReadAddress;
 				 b = uni.getStorageSync('bookReadAddress')
 				 this.$store.state.bookReadAddress = b;
-				let c = this.$store.state.localbookshelf; 
-				c = uni.getStorageSync('localbookshelf')
-				this.$store.state.localbookshelf = c;
+				// let c = this.$store.state.localbookshelf; 
+				// c = uni.getStorageSync('localbookshelf')
+				// this.$store.state.localbookshelf = c;
 				//  uni.removeStorageSync('localbookshelf');
 				// console.log(this.$store.state.localbookshelf) 
 		},

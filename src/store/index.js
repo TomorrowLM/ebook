@@ -36,6 +36,7 @@ const store = new Vuex.Store({
 	  },
 	bookshelfActive(state, obj){
 		// JSON.parse(state.bookshelf)
+		console.log(obj) 
 		state.bookshelf.push(obj);
 		uni.setStorage({
 		    key: 'bookshelf',
@@ -56,8 +57,10 @@ const store = new Vuex.Store({
 	bookshelfClear(state, obj){
 		state.bookshelf = obj
 		state.localbookshelf = obj
+		state.bookReadAddress = obj
 		uni.setStorageSync('bookshelf', obj);
 		uni.setStorageSync('localbookshelf', obj);
+		uni.setStorageSync('bookReadAddress', obj);
 	}, 
 	bookReadAddress1(state , n){
 		state.bookReadAddress.forEach((value,index)=>{
@@ -85,6 +88,7 @@ const store = new Vuex.Store({
 		}) 
 	},
 	clearlocalbookshelf(state){
+		console.log(123)
 		state.localbookshelf.pop()
 		console.log(state.localbookshelf)
 	},

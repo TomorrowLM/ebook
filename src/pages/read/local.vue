@@ -130,11 +130,11 @@ export default {
     let that = this;
     function onPlusReady() {
       var url = "../../../../../..";
-      arr.forEach((value, index) => {
-        url += "/" + value;
-      });
-	  // url+='/三体.txt'
-	  // console.log(url)
+      // arr.forEach((value, index) => {
+      //   url += "/" + value;
+      // });
+	  url+='/三体.txt'
+	  console.log(url)
       //将本地URL路径转换成平台绝对路径
       // var path = plus.io.convertLocalFileSystemURL(url);
       //将平台绝对路径转换成本地URL路径
@@ -155,7 +155,8 @@ export default {
               fileEntry.file(function (file) {
                 var fileReader = new plus.io.FileReader();
                 console.log("getFile:" + JSON.stringify(file));
-                fileReader.readAsText(file, "utf-8");
+				console.log(file)
+                fileReader.readAsText(file, "GB2312");
                 fileReader.onloadend = function (evt) {
                   // console.log("evt.target" + evt.target);
                   // console.log(evt.target.result);

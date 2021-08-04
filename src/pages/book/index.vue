@@ -169,7 +169,7 @@ export default {
           // 判断文件类型
           var resolver = context.getContentResolver();
           var fileType = plus.android.invoke(resolver, "getType", fileData);
-          // console.log("fileType:" + fileType);
+           console.log("fileType:" + fileType);
           that.$store.state.isShowInbook = true;
         }
       };
